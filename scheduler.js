@@ -19,7 +19,7 @@ function runBotCycle() {
     const target = getNextTarget();
     
     try {
-        console.log(`\n[SCHEDULER] Tahap 1: Menjalankan Scraper...`);
+        console.log(`\n[SCHEDULER] Tahap 1: Menjalankan Scraper untuk Kategori: "${target.niche}" di Kota: "${target.city}"...`);
         execSync(`node scraper.js "${target.niche}" "${target.city}" 15`, { stdio: 'inherit' });
     } catch (error) {
         console.error(`[SCHEDULER] Error saat menjalankan scraper:`, error.message);
@@ -33,7 +33,7 @@ function runBotCycle() {
         console.error(`[SCHEDULER] Error saat menjalankan sender WA:`, error.message);
     }
     
-    console.log(`\n✅ [SCHEDULER] Siklus selesai. Menunggu jadwal berikutnya...`);
+    console.log(`\n✅ [SCHEDULER] Siklus otomatis selesai. Menunggu jadwal cron berikutnya...`);
 }
 
 // Jadwalkan task
@@ -41,8 +41,9 @@ cron.schedule(SCHEDULE, () => {
     runBotCycle();
 });
 
-// Uncomment baris di bawah HANYA untuk testing manual:
-// runBotCycle();
+// Jalankan sekali langsung saat startup agar pengguna bisa melihat proses berjalan otomatis seketika!
+console.log(`\n🚀 [SCHEDULER] Menjalankan siklus otomatis pertama langsung saat startup...`);
+runBotCycle();
 
 console.log(`⏰ Jadwal terpasang: ${SCHEDULE} (Jam 9 pagi, 1 siang, 5 sore)`);
 console.log(`Tekan Ctrl + C untuk mematikan scheduler.`);
