@@ -51,9 +51,13 @@ async function scrapeGMaps(niche, city, totalLeads = 10) {
     try {
         browser = await puppeteer.launch(launchOptions);
     } catch (launchError) {
-        console.error(`[SCRAPER] FATAL: Gagal menjalankan browser!`);
+        console.error(`\n[SCRAPER] ❌ FATAL: Gagal menjalankan browser!`);
         console.error(`Pesan Error: ${launchError.message}`);
-        console.log(`[TIPS] Pastikan sudah install library sistem: sudo apt-get install -y libnss3 libatk1.0-0 libatk-bridge2.0-0 libcups2 libdrm2 libxkbcommon0 libxcomposite1 libxdamage1 libxrandr2 libgbm1 libpango-1.0-0 libcairo2 libasound2`);
+        console.log(`\n[SOLUSI] Masalah ini biasanya karena:`);
+        console.log(`1. Library sistem kurang. Jalankan ini di VPS:`);
+        console.log(`   sudo apt-get update && sudo apt-get install -y libnss3 libatk1.0-0 libatk-bridge2.0-0 libcups2 libdrm2 libxkbcommon0 libxcomposite1 libxdamage1 libxrandr2 libgbm1 libpango-1.0-0 libcairo2 libasound2 chromium-browser`);
+        console.log(`2. Disk VPS Penuh. Cek dengan perintah: df -h`);
+        console.log(`3. Folder /tmp penuh atau tidak punya ijin tulis.`);
         return;
     }
     
