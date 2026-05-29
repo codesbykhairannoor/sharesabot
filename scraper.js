@@ -69,11 +69,13 @@ async function scrapeGMaps(niche, city, totalLeads = 10) {
     await page.setUserAgent('Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36');
     
     try {
-        await page.goto(searchUrl, { waitUntil: 'networkidle2', timeout: 90000 });
+        console.log(`[SCRAPER] Memuat halaman Google Maps...`);
+        await page.goto(searchUrl, { waitUntil: 'domcontentloaded', timeout: 45000 });
         await new Promise(r => setTimeout(r, 5000));
-        await page.waitForSelector('div[role="feed"]', { timeout: 30000 });
+        console.log(`[SCRAPER] Menunggu panel hasil pencarian muncul...`);
+        await page.waitForSelector('div[role="feed"]', { timeout: 45000 });
     } catch (e) {
-        console.log(`[SCRAPER] Gagal memuat halaman: ${e.message}`);
+        console.log(`[SCRAPER] Gagal memuat halaman atau feed tidak ditemukan: ${e.message}`);
         await browser.close();
         return;
     }
@@ -83,7 +85,13 @@ async function scrapeGMaps(niche, city, totalLeads = 10) {
     let scrollAttempts = 0;
     
     while (results.length < totalLeads && scrollAttempts < 15) {
-        await page.mouse.wheel({ deltaY: 3000 });
+        // Scroll panel hasil pencarian secara langsung di dalam browser agar stabil
+        await page.evaluate(() => {
+            const feed = document.querySelector('div[role="feed"]');
+            if (feed) {
+                feed.scrollBy(0, 3000);
+            }
+        });
         await new Promise(r => setTimeout(r, 3000));
         scrollAttempts++;
         
