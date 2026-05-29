@@ -1,7 +1,24 @@
 const puppeteer = require('puppeteer');
 const fs = require('fs');
+const path = require('path');
 
 const DB_FILE = 'database.json';
+
+// Auto-detect Chrome/Chromium di sistem
+function findChromePath() {
+    const candidates = [
+        '/usr/bin/google-chrome-stable',
+        '/usr/bin/google-chrome',
+        '/usr/bin/chromium-browser',
+        '/usr/bin/chromium',
+        '/snap/bin/chromium',
+        '/usr/bin/google-chrome-unstable'
+    ];
+    for (const p of candidates) {
+        if (fs.existsSync(p)) return p;
+    }
+    return null; // fallback ke bundled Puppeteer
+}
 
 async function scrapeGMaps(niche, city, totalLeads = 10) {
     const fullQuery = `${niche} di ${city}`;
@@ -9,17 +26,36 @@ async function scrapeGMaps(niche, city, totalLeads = 10) {
     
     console.log(`[SCRAPER] Navigasi ke: ${searchUrl}`);
     
-    const browser = await puppeteer.launch({
+    const chromePath = findChromePath();
+    if (chromePath) {
+        console.log(`[SCRAPER] Menggunakan browser: ${chromePath}`);
+    } else {
+        console.log(`[SCRAPER] Tidak ditemukan browser sistem, menggunakan bawaan Puppeteer.`);
+    }
+    
+    const launchOptions = {
         headless: 'new',
         args: [
             '--no-sandbox',
             '--disable-setuid-sandbox',
-            '--disable-dev-shm-usage',   // Hemat RAM di VPS
+            '--disable-dev-shm-usage',
             '--disable-gpu',
-            '--single-process',           // Hemat RAM di VPS
-            '--no-zygote'
+            '--single-process',
+            '--no-zygote',
+            '--disable-extensions'
         ]
-    });
+    };
+    if (chromePath) launchOptions.executablePath = chromePath;
+    
+    let browser;
+    try {
+        browser = await puppeteer.launch(launchOptions);
+    } catch (launchError) {
+        console.error(`[SCRAPER] FATAL: Gagal menjalankan browser!`);
+        console.error(`Pesan Error: ${launchError.message}`);
+        console.log(`[TIPS] Pastikan sudah install library sistem: sudo apt-get install -y libnss3 libatk1.0-0 libatk-bridge2.0-0 libcups2 libdrm2 libxkbcommon0 libxcomposite1 libxdamage1 libxrandr2 libgbm1 libpango-1.0-0 libcairo2 libasound2`);
+        return;
+    }
     
     const page = await browser.newPage();
     await page.setUserAgent('Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36');
