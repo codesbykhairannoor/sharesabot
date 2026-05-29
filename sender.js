@@ -6,8 +6,9 @@ const qrcode = require('qrcode-terminal');
 const QUEUE_FILE = 'database.json';
 
 function getCustomMessage(name, niche, city) {
-    return `Halo kak, salam kenal. Saya liat profil ${name} di Google Maps daerah ${city}. Portofolionya bagus banget! ✨\n\n` +
-           `Kebetulan kami dari Sharesa (sharesa.space). Skrg kan lagi rame bgt isu penipuan WO/MUA/Catering bodong ya kak. Nah, biar calon klien makin trust dan ngerasa aman, kita ada solusi pembuatan website portofolio profesional.\n\n` +
+    return `Halo kak, salam kenal. Saya liat profil ${name} di Google Maps daerah ${city}. Ulasannya bagus banget! ✨\n\n` +
+           `Kebetulan kami dari Sharesa (sharesa.space). Skrg kan klien tuh makin kritis ya kak, apalagi di industri ${niche} lagi rame banget isu bisnis fiktif/bodong.\n\n` +
+           `Nah, biar calon klien makin trust dan yakin pas nyari jasa ${niche}, kita ada solusi pembuatan website company profile/portofolio profesional.\n\n` +
            `Kalo dari ${name} ada rencana ningkatin trust klien lewat website, mari diskusi santai kak. Sukses terus ya! 😊`;
 }
 
