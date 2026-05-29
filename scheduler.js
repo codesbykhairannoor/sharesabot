@@ -20,8 +20,9 @@ function runBotCycle() {
     
     try {
         console.log(`\n[SCHEDULER] Tahap 1: Menjalankan Python Scraper...`);
-        // Ganti 'python' dengan 'python3' jika di server Linux
-        execSync(`python backend_scraper.py "${target.niche}" "${target.city}" 15`, { stdio: 'inherit' });
+        // python3 untuk Linux, python untuk Windows
+        const pyCmd = process.platform === 'win32' ? 'python' : 'python3';
+        execSync(`${pyCmd} backend_scraper.py "${target.niche}" "${target.city}" 15`, { stdio: 'inherit' });
     } catch (error) {
         console.error(`[SCHEDULER] Error saat menjalankan scraper:`, error.message);
     }
@@ -42,8 +43,8 @@ cron.schedule(SCHEDULE, () => {
     runBotCycle();
 });
 
-// Opsi: Jika ingin langsung test run saat script dijalankan
-runBotCycle();
+// Uncomment baris di bawah HANYA untuk testing manual:
+// runBotCycle();
 
 console.log(`⏰ Jadwal terpasang: ${SCHEDULE} (Jam 9 pagi, 1 siang, 5 sore)`);
 console.log(`Tekan Ctrl + C untuk mematikan scheduler.`);

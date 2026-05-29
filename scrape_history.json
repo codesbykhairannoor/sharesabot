@@ -1,502 +1,502 @@
 [
     {
         "niche": "Make Up Artist",
+        "city": "Bandung",
+        "last_scraped": 1780062509664
+    },
+    {
+        "niche": "Make Up Artist",
+        "city": "Surabaya",
+        "last_scraped": 0
+    },
+    {
+        "niche": "Make Up Artist",
+        "city": "Semarang",
+        "last_scraped": 0
+    },
+    {
+        "niche": "Make Up Artist",
+        "city": "Medan",
+        "last_scraped": 0
+    },
+    {
+        "niche": "Make Up Artist",
+        "city": "Makassar",
+        "last_scraped": 0
+    },
+    {
+        "niche": "Make Up Artist",
+        "city": "Yogyakarta",
+        "last_scraped": 0
+    },
+    {
+        "niche": "Make Up Artist",
+        "city": "Palembang",
+        "last_scraped": 0
+    },
+    {
+        "niche": "Make Up Artist",
+        "city": "Bali",
+        "last_scraped": 0
+    },
+    {
+        "niche": "Make Up Artist",
+        "city": "Malang",
+        "last_scraped": 0
+    },
+    {
+        "niche": "Catering Pernikahan",
+        "city": "Jakarta",
+        "last_scraped": 0
+    },
+    {
+        "niche": "Catering Pernikahan",
+        "city": "Bandung",
+        "last_scraped": 0
+    },
+    {
+        "niche": "Catering Pernikahan",
+        "city": "Surabaya",
+        "last_scraped": 0
+    },
+    {
+        "niche": "Catering Pernikahan",
+        "city": "Semarang",
+        "last_scraped": 0
+    },
+    {
+        "niche": "Catering Pernikahan",
+        "city": "Medan",
+        "last_scraped": 0
+    },
+    {
+        "niche": "Catering Pernikahan",
+        "city": "Makassar",
+        "last_scraped": 0
+    },
+    {
+        "niche": "Catering Pernikahan",
+        "city": "Yogyakarta",
+        "last_scraped": 0
+    },
+    {
+        "niche": "Catering Pernikahan",
+        "city": "Palembang",
+        "last_scraped": 0
+    },
+    {
+        "niche": "Catering Pernikahan",
+        "city": "Bali",
+        "last_scraped": 0
+    },
+    {
+        "niche": "Catering Pernikahan",
+        "city": "Malang",
+        "last_scraped": 0
+    },
+    {
+        "niche": "Wedding Organizer",
+        "city": "Jakarta",
+        "last_scraped": 0
+    },
+    {
+        "niche": "Wedding Organizer",
+        "city": "Bandung",
+        "last_scraped": 0
+    },
+    {
+        "niche": "Wedding Organizer",
+        "city": "Surabaya",
+        "last_scraped": 0
+    },
+    {
+        "niche": "Wedding Organizer",
+        "city": "Semarang",
+        "last_scraped": 0
+    },
+    {
+        "niche": "Wedding Organizer",
+        "city": "Medan",
+        "last_scraped": 0
+    },
+    {
+        "niche": "Wedding Organizer",
+        "city": "Makassar",
+        "last_scraped": 0
+    },
+    {
+        "niche": "Wedding Organizer",
+        "city": "Yogyakarta",
+        "last_scraped": 0
+    },
+    {
+        "niche": "Wedding Organizer",
+        "city": "Palembang",
+        "last_scraped": 0
+    },
+    {
+        "niche": "Wedding Organizer",
+        "city": "Bali",
+        "last_scraped": 0
+    },
+    {
+        "niche": "Wedding Organizer",
+        "city": "Malang",
+        "last_scraped": 0
+    },
+    {
+        "niche": "Kontraktor Interior",
+        "city": "Jakarta",
+        "last_scraped": 0
+    },
+    {
+        "niche": "Kontraktor Interior",
+        "city": "Bandung",
+        "last_scraped": 0
+    },
+    {
+        "niche": "Kontraktor Interior",
+        "city": "Surabaya",
+        "last_scraped": 0
+    },
+    {
+        "niche": "Kontraktor Interior",
+        "city": "Semarang",
+        "last_scraped": 0
+    },
+    {
+        "niche": "Kontraktor Interior",
+        "city": "Medan",
+        "last_scraped": 0
+    },
+    {
+        "niche": "Kontraktor Interior",
+        "city": "Makassar",
+        "last_scraped": 0
+    },
+    {
+        "niche": "Kontraktor Interior",
+        "city": "Yogyakarta",
+        "last_scraped": 0
+    },
+    {
+        "niche": "Kontraktor Interior",
+        "city": "Palembang",
+        "last_scraped": 0
+    },
+    {
+        "niche": "Kontraktor Interior",
+        "city": "Bali",
+        "last_scraped": 0
+    },
+    {
+        "niche": "Kontraktor Interior",
+        "city": "Malang",
+        "last_scraped": 0
+    },
+    {
+        "niche": "Klinik Kecantikan",
+        "city": "Jakarta",
+        "last_scraped": 0
+    },
+    {
+        "niche": "Klinik Kecantikan",
+        "city": "Bandung",
+        "last_scraped": 0
+    },
+    {
+        "niche": "Klinik Kecantikan",
+        "city": "Surabaya",
+        "last_scraped": 0
+    },
+    {
+        "niche": "Klinik Kecantikan",
+        "city": "Semarang",
+        "last_scraped": 0
+    },
+    {
+        "niche": "Klinik Kecantikan",
+        "city": "Medan",
+        "last_scraped": 0
+    },
+    {
+        "niche": "Klinik Kecantikan",
+        "city": "Makassar",
+        "last_scraped": 0
+    },
+    {
+        "niche": "Klinik Kecantikan",
+        "city": "Yogyakarta",
+        "last_scraped": 0
+    },
+    {
+        "niche": "Klinik Kecantikan",
+        "city": "Palembang",
+        "last_scraped": 0
+    },
+    {
+        "niche": "Klinik Kecantikan",
+        "city": "Bali",
+        "last_scraped": 0
+    },
+    {
+        "niche": "Klinik Kecantikan",
+        "city": "Malang",
+        "last_scraped": 0
+    },
+    {
+        "niche": "Klinik Gigi",
+        "city": "Jakarta",
+        "last_scraped": 0
+    },
+    {
+        "niche": "Klinik Gigi",
+        "city": "Bandung",
+        "last_scraped": 0
+    },
+    {
+        "niche": "Klinik Gigi",
+        "city": "Surabaya",
+        "last_scraped": 0
+    },
+    {
+        "niche": "Klinik Gigi",
+        "city": "Semarang",
+        "last_scraped": 0
+    },
+    {
+        "niche": "Klinik Gigi",
+        "city": "Medan",
+        "last_scraped": 0
+    },
+    {
+        "niche": "Klinik Gigi",
+        "city": "Makassar",
+        "last_scraped": 0
+    },
+    {
+        "niche": "Klinik Gigi",
+        "city": "Yogyakarta",
+        "last_scraped": 0
+    },
+    {
+        "niche": "Klinik Gigi",
+        "city": "Palembang",
+        "last_scraped": 0
+    },
+    {
+        "niche": "Klinik Gigi",
+        "city": "Bali",
+        "last_scraped": 0
+    },
+    {
+        "niche": "Klinik Gigi",
+        "city": "Malang",
+        "last_scraped": 0
+    },
+    {
+        "niche": "Rental Mobil Mewah",
+        "city": "Jakarta",
+        "last_scraped": 0
+    },
+    {
+        "niche": "Rental Mobil Mewah",
+        "city": "Bandung",
+        "last_scraped": 0
+    },
+    {
+        "niche": "Rental Mobil Mewah",
+        "city": "Surabaya",
+        "last_scraped": 0
+    },
+    {
+        "niche": "Rental Mobil Mewah",
+        "city": "Semarang",
+        "last_scraped": 0
+    },
+    {
+        "niche": "Rental Mobil Mewah",
+        "city": "Medan",
+        "last_scraped": 0
+    },
+    {
+        "niche": "Rental Mobil Mewah",
+        "city": "Makassar",
+        "last_scraped": 0
+    },
+    {
+        "niche": "Rental Mobil Mewah",
+        "city": "Yogyakarta",
+        "last_scraped": 0
+    },
+    {
+        "niche": "Rental Mobil Mewah",
+        "city": "Palembang",
+        "last_scraped": 0
+    },
+    {
+        "niche": "Rental Mobil Mewah",
+        "city": "Bali",
+        "last_scraped": 0
+    },
+    {
+        "niche": "Rental Mobil Mewah",
+        "city": "Malang",
+        "last_scraped": 0
+    },
+    {
+        "niche": "Studio Foto",
+        "city": "Jakarta",
+        "last_scraped": 0
+    },
+    {
+        "niche": "Studio Foto",
+        "city": "Bandung",
+        "last_scraped": 0
+    },
+    {
+        "niche": "Studio Foto",
+        "city": "Surabaya",
+        "last_scraped": 0
+    },
+    {
+        "niche": "Studio Foto",
+        "city": "Semarang",
+        "last_scraped": 0
+    },
+    {
+        "niche": "Studio Foto",
+        "city": "Medan",
+        "last_scraped": 0
+    },
+    {
+        "niche": "Studio Foto",
+        "city": "Makassar",
+        "last_scraped": 0
+    },
+    {
+        "niche": "Studio Foto",
+        "city": "Yogyakarta",
+        "last_scraped": 0
+    },
+    {
+        "niche": "Studio Foto",
+        "city": "Palembang",
+        "last_scraped": 0
+    },
+    {
+        "niche": "Studio Foto",
+        "city": "Bali",
+        "last_scraped": 0
+    },
+    {
+        "niche": "Studio Foto",
+        "city": "Malang",
+        "last_scraped": 0
+    },
+    {
+        "niche": "Event Organizer",
+        "city": "Jakarta",
+        "last_scraped": 0
+    },
+    {
+        "niche": "Event Organizer",
+        "city": "Bandung",
+        "last_scraped": 0
+    },
+    {
+        "niche": "Event Organizer",
+        "city": "Surabaya",
+        "last_scraped": 0
+    },
+    {
+        "niche": "Event Organizer",
+        "city": "Semarang",
+        "last_scraped": 0
+    },
+    {
+        "niche": "Event Organizer",
+        "city": "Medan",
+        "last_scraped": 0
+    },
+    {
+        "niche": "Event Organizer",
+        "city": "Makassar",
+        "last_scraped": 0
+    },
+    {
+        "niche": "Event Organizer",
+        "city": "Yogyakarta",
+        "last_scraped": 0
+    },
+    {
+        "niche": "Event Organizer",
+        "city": "Palembang",
+        "last_scraped": 0
+    },
+    {
+        "niche": "Event Organizer",
+        "city": "Bali",
+        "last_scraped": 0
+    },
+    {
+        "niche": "Event Organizer",
+        "city": "Malang",
+        "last_scraped": 0
+    },
+    {
+        "niche": "Jasa Arsitek",
+        "city": "Jakarta",
+        "last_scraped": 0
+    },
+    {
+        "niche": "Jasa Arsitek",
+        "city": "Bandung",
+        "last_scraped": 0
+    },
+    {
+        "niche": "Jasa Arsitek",
+        "city": "Surabaya",
+        "last_scraped": 0
+    },
+    {
+        "niche": "Jasa Arsitek",
+        "city": "Semarang",
+        "last_scraped": 0
+    },
+    {
+        "niche": "Jasa Arsitek",
+        "city": "Medan",
+        "last_scraped": 0
+    },
+    {
+        "niche": "Jasa Arsitek",
+        "city": "Makassar",
+        "last_scraped": 0
+    },
+    {
+        "niche": "Jasa Arsitek",
+        "city": "Yogyakarta",
+        "last_scraped": 0
+    },
+    {
+        "niche": "Jasa Arsitek",
+        "city": "Palembang",
+        "last_scraped": 0
+    },
+    {
+        "niche": "Jasa Arsitek",
+        "city": "Bali",
+        "last_scraped": 0
+    },
+    {
+        "niche": "Jasa Arsitek",
+        "city": "Malang",
+        "last_scraped": 0
+    },
+    {
+        "niche": "Make Up Artist",
         "city": "Jakarta",
         "last_scraped": 1780038715628
-    },
-    {
-        "niche": "Make Up Artist",
-        "city": "Bandung",
-        "last_scraped": 0
-    },
-    {
-        "niche": "Make Up Artist",
-        "city": "Surabaya",
-        "last_scraped": 0
-    },
-    {
-        "niche": "Make Up Artist",
-        "city": "Semarang",
-        "last_scraped": 0
-    },
-    {
-        "niche": "Make Up Artist",
-        "city": "Medan",
-        "last_scraped": 0
-    },
-    {
-        "niche": "Make Up Artist",
-        "city": "Makassar",
-        "last_scraped": 0
-    },
-    {
-        "niche": "Make Up Artist",
-        "city": "Yogyakarta",
-        "last_scraped": 0
-    },
-    {
-        "niche": "Make Up Artist",
-        "city": "Palembang",
-        "last_scraped": 0
-    },
-    {
-        "niche": "Make Up Artist",
-        "city": "Bali",
-        "last_scraped": 0
-    },
-    {
-        "niche": "Make Up Artist",
-        "city": "Malang",
-        "last_scraped": 0
-    },
-    {
-        "niche": "Catering Pernikahan",
-        "city": "Jakarta",
-        "last_scraped": 0
-    },
-    {
-        "niche": "Catering Pernikahan",
-        "city": "Bandung",
-        "last_scraped": 0
-    },
-    {
-        "niche": "Catering Pernikahan",
-        "city": "Surabaya",
-        "last_scraped": 0
-    },
-    {
-        "niche": "Catering Pernikahan",
-        "city": "Semarang",
-        "last_scraped": 0
-    },
-    {
-        "niche": "Catering Pernikahan",
-        "city": "Medan",
-        "last_scraped": 0
-    },
-    {
-        "niche": "Catering Pernikahan",
-        "city": "Makassar",
-        "last_scraped": 0
-    },
-    {
-        "niche": "Catering Pernikahan",
-        "city": "Yogyakarta",
-        "last_scraped": 0
-    },
-    {
-        "niche": "Catering Pernikahan",
-        "city": "Palembang",
-        "last_scraped": 0
-    },
-    {
-        "niche": "Catering Pernikahan",
-        "city": "Bali",
-        "last_scraped": 0
-    },
-    {
-        "niche": "Catering Pernikahan",
-        "city": "Malang",
-        "last_scraped": 0
-    },
-    {
-        "niche": "Wedding Organizer",
-        "city": "Jakarta",
-        "last_scraped": 0
-    },
-    {
-        "niche": "Wedding Organizer",
-        "city": "Bandung",
-        "last_scraped": 0
-    },
-    {
-        "niche": "Wedding Organizer",
-        "city": "Surabaya",
-        "last_scraped": 0
-    },
-    {
-        "niche": "Wedding Organizer",
-        "city": "Semarang",
-        "last_scraped": 0
-    },
-    {
-        "niche": "Wedding Organizer",
-        "city": "Medan",
-        "last_scraped": 0
-    },
-    {
-        "niche": "Wedding Organizer",
-        "city": "Makassar",
-        "last_scraped": 0
-    },
-    {
-        "niche": "Wedding Organizer",
-        "city": "Yogyakarta",
-        "last_scraped": 0
-    },
-    {
-        "niche": "Wedding Organizer",
-        "city": "Palembang",
-        "last_scraped": 0
-    },
-    {
-        "niche": "Wedding Organizer",
-        "city": "Bali",
-        "last_scraped": 0
-    },
-    {
-        "niche": "Wedding Organizer",
-        "city": "Malang",
-        "last_scraped": 0
-    },
-    {
-        "niche": "Kontraktor Interior",
-        "city": "Jakarta",
-        "last_scraped": 0
-    },
-    {
-        "niche": "Kontraktor Interior",
-        "city": "Bandung",
-        "last_scraped": 0
-    },
-    {
-        "niche": "Kontraktor Interior",
-        "city": "Surabaya",
-        "last_scraped": 0
-    },
-    {
-        "niche": "Kontraktor Interior",
-        "city": "Semarang",
-        "last_scraped": 0
-    },
-    {
-        "niche": "Kontraktor Interior",
-        "city": "Medan",
-        "last_scraped": 0
-    },
-    {
-        "niche": "Kontraktor Interior",
-        "city": "Makassar",
-        "last_scraped": 0
-    },
-    {
-        "niche": "Kontraktor Interior",
-        "city": "Yogyakarta",
-        "last_scraped": 0
-    },
-    {
-        "niche": "Kontraktor Interior",
-        "city": "Palembang",
-        "last_scraped": 0
-    },
-    {
-        "niche": "Kontraktor Interior",
-        "city": "Bali",
-        "last_scraped": 0
-    },
-    {
-        "niche": "Kontraktor Interior",
-        "city": "Malang",
-        "last_scraped": 0
-    },
-    {
-        "niche": "Klinik Kecantikan",
-        "city": "Jakarta",
-        "last_scraped": 0
-    },
-    {
-        "niche": "Klinik Kecantikan",
-        "city": "Bandung",
-        "last_scraped": 0
-    },
-    {
-        "niche": "Klinik Kecantikan",
-        "city": "Surabaya",
-        "last_scraped": 0
-    },
-    {
-        "niche": "Klinik Kecantikan",
-        "city": "Semarang",
-        "last_scraped": 0
-    },
-    {
-        "niche": "Klinik Kecantikan",
-        "city": "Medan",
-        "last_scraped": 0
-    },
-    {
-        "niche": "Klinik Kecantikan",
-        "city": "Makassar",
-        "last_scraped": 0
-    },
-    {
-        "niche": "Klinik Kecantikan",
-        "city": "Yogyakarta",
-        "last_scraped": 0
-    },
-    {
-        "niche": "Klinik Kecantikan",
-        "city": "Palembang",
-        "last_scraped": 0
-    },
-    {
-        "niche": "Klinik Kecantikan",
-        "city": "Bali",
-        "last_scraped": 0
-    },
-    {
-        "niche": "Klinik Kecantikan",
-        "city": "Malang",
-        "last_scraped": 0
-    },
-    {
-        "niche": "Klinik Gigi",
-        "city": "Jakarta",
-        "last_scraped": 0
-    },
-    {
-        "niche": "Klinik Gigi",
-        "city": "Bandung",
-        "last_scraped": 0
-    },
-    {
-        "niche": "Klinik Gigi",
-        "city": "Surabaya",
-        "last_scraped": 0
-    },
-    {
-        "niche": "Klinik Gigi",
-        "city": "Semarang",
-        "last_scraped": 0
-    },
-    {
-        "niche": "Klinik Gigi",
-        "city": "Medan",
-        "last_scraped": 0
-    },
-    {
-        "niche": "Klinik Gigi",
-        "city": "Makassar",
-        "last_scraped": 0
-    },
-    {
-        "niche": "Klinik Gigi",
-        "city": "Yogyakarta",
-        "last_scraped": 0
-    },
-    {
-        "niche": "Klinik Gigi",
-        "city": "Palembang",
-        "last_scraped": 0
-    },
-    {
-        "niche": "Klinik Gigi",
-        "city": "Bali",
-        "last_scraped": 0
-    },
-    {
-        "niche": "Klinik Gigi",
-        "city": "Malang",
-        "last_scraped": 0
-    },
-    {
-        "niche": "Rental Mobil Mewah",
-        "city": "Jakarta",
-        "last_scraped": 0
-    },
-    {
-        "niche": "Rental Mobil Mewah",
-        "city": "Bandung",
-        "last_scraped": 0
-    },
-    {
-        "niche": "Rental Mobil Mewah",
-        "city": "Surabaya",
-        "last_scraped": 0
-    },
-    {
-        "niche": "Rental Mobil Mewah",
-        "city": "Semarang",
-        "last_scraped": 0
-    },
-    {
-        "niche": "Rental Mobil Mewah",
-        "city": "Medan",
-        "last_scraped": 0
-    },
-    {
-        "niche": "Rental Mobil Mewah",
-        "city": "Makassar",
-        "last_scraped": 0
-    },
-    {
-        "niche": "Rental Mobil Mewah",
-        "city": "Yogyakarta",
-        "last_scraped": 0
-    },
-    {
-        "niche": "Rental Mobil Mewah",
-        "city": "Palembang",
-        "last_scraped": 0
-    },
-    {
-        "niche": "Rental Mobil Mewah",
-        "city": "Bali",
-        "last_scraped": 0
-    },
-    {
-        "niche": "Rental Mobil Mewah",
-        "city": "Malang",
-        "last_scraped": 0
-    },
-    {
-        "niche": "Studio Foto",
-        "city": "Jakarta",
-        "last_scraped": 0
-    },
-    {
-        "niche": "Studio Foto",
-        "city": "Bandung",
-        "last_scraped": 0
-    },
-    {
-        "niche": "Studio Foto",
-        "city": "Surabaya",
-        "last_scraped": 0
-    },
-    {
-        "niche": "Studio Foto",
-        "city": "Semarang",
-        "last_scraped": 0
-    },
-    {
-        "niche": "Studio Foto",
-        "city": "Medan",
-        "last_scraped": 0
-    },
-    {
-        "niche": "Studio Foto",
-        "city": "Makassar",
-        "last_scraped": 0
-    },
-    {
-        "niche": "Studio Foto",
-        "city": "Yogyakarta",
-        "last_scraped": 0
-    },
-    {
-        "niche": "Studio Foto",
-        "city": "Palembang",
-        "last_scraped": 0
-    },
-    {
-        "niche": "Studio Foto",
-        "city": "Bali",
-        "last_scraped": 0
-    },
-    {
-        "niche": "Studio Foto",
-        "city": "Malang",
-        "last_scraped": 0
-    },
-    {
-        "niche": "Event Organizer",
-        "city": "Jakarta",
-        "last_scraped": 0
-    },
-    {
-        "niche": "Event Organizer",
-        "city": "Bandung",
-        "last_scraped": 0
-    },
-    {
-        "niche": "Event Organizer",
-        "city": "Surabaya",
-        "last_scraped": 0
-    },
-    {
-        "niche": "Event Organizer",
-        "city": "Semarang",
-        "last_scraped": 0
-    },
-    {
-        "niche": "Event Organizer",
-        "city": "Medan",
-        "last_scraped": 0
-    },
-    {
-        "niche": "Event Organizer",
-        "city": "Makassar",
-        "last_scraped": 0
-    },
-    {
-        "niche": "Event Organizer",
-        "city": "Yogyakarta",
-        "last_scraped": 0
-    },
-    {
-        "niche": "Event Organizer",
-        "city": "Palembang",
-        "last_scraped": 0
-    },
-    {
-        "niche": "Event Organizer",
-        "city": "Bali",
-        "last_scraped": 0
-    },
-    {
-        "niche": "Event Organizer",
-        "city": "Malang",
-        "last_scraped": 0
-    },
-    {
-        "niche": "Jasa Arsitek",
-        "city": "Jakarta",
-        "last_scraped": 0
-    },
-    {
-        "niche": "Jasa Arsitek",
-        "city": "Bandung",
-        "last_scraped": 0
-    },
-    {
-        "niche": "Jasa Arsitek",
-        "city": "Surabaya",
-        "last_scraped": 0
-    },
-    {
-        "niche": "Jasa Arsitek",
-        "city": "Semarang",
-        "last_scraped": 0
-    },
-    {
-        "niche": "Jasa Arsitek",
-        "city": "Medan",
-        "last_scraped": 0
-    },
-    {
-        "niche": "Jasa Arsitek",
-        "city": "Makassar",
-        "last_scraped": 0
-    },
-    {
-        "niche": "Jasa Arsitek",
-        "city": "Yogyakarta",
-        "last_scraped": 0
-    },
-    {
-        "niche": "Jasa Arsitek",
-        "city": "Palembang",
-        "last_scraped": 0
-    },
-    {
-        "niche": "Jasa Arsitek",
-        "city": "Bali",
-        "last_scraped": 0
-    },
-    {
-        "niche": "Jasa Arsitek",
-        "city": "Malang",
-        "last_scraped": 0
     }
 ]
