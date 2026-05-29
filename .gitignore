@@ -1,0 +1,12 @@
+# Node.js
+node_modules/
+
+# WhatsApp Session (PENTING! JANGAN DI-PUSH)
+auth_info_baileys/
+
+# Data Leads
+database.json
+
+# Python
+__pycache__/
+*.pyc

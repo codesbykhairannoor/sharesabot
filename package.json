@@ -1,0 +1,18 @@
+{
+  "name": "wa-backend-sender",
+  "version": "1.0.0",
+  "description": "WhatsApp backend sender using Baileys",
+  "main": "sender.js",
+  "scripts": {
+    "start": "node sender.js"
+  },
+  "dependencies": {
+    "@whiskeysockets/baileys": "^6.7.16",
+    "qrcode-terminal": "^0.12.0",
+    "pino": "^9.5.0",
+    "pino-pretty": "^11.3.0"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}
