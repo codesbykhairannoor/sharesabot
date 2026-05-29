@@ -38,9 +38,14 @@ async function scrapeGMaps(niche, city, totalLeads = 10) {
             '--disable-setuid-sandbox',
             '--disable-dev-shm-usage',
             '--disable-gpu',
-            '--single-process',
             '--no-zygote',
-            '--disable-extensions'
+            '--disable-extensions',
+            '--disable-features=site-per-process',
+            '--js-flags=--max-old-space-size=256',
+            '--disable-renderer-backgrounding',
+            '--disable-background-timer-throttling',
+            '--disable-backgrounding-occluded-windows',
+            '--disable-ipc-flooding-protection'
         ]
     };
     if (chromePath) launchOptions.executablePath = chromePath;
