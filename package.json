@@ -3,10 +3,6 @@
   "version": "1.0.0",
   "description": "WhatsApp backend sender using Baileys",
   "main": "sender.js",
-  "scripts": {
-    "start": "node sender.js",
-    "start:auto": "node scheduler.js"
-  },
   "dependencies": {
     "@whiskeysockets/baileys": "^6.7.16",
     "node-cron": "^4.2.1",
@@ -14,6 +10,11 @@
     "pino-pretty": "^11.3.0",
     "puppeteer": "^24.43.1",
     "qrcode-terminal": "^0.12.0"
+  },
+  "scripts": {
+    "start": "node sender.js",
+    "start:auto": "node scheduler.js",
+    "install:vps": "PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true npm install"
   },
   "engines": {
     "node": ">=18"
