@@ -9,15 +9,13 @@ function findChromePath() {
     const candidates = [
         '/usr/bin/google-chrome-stable',
         '/usr/bin/google-chrome',
-        '/usr/bin/chromium-browser',
         '/usr/bin/chromium',
-        '/snap/bin/chromium',
         '/usr/bin/google-chrome-unstable'
     ];
     for (const p of candidates) {
         if (fs.existsSync(p)) return p;
     }
-    return null; // fallback ke bundled Puppeteer
+    return null; // fallback ke bundled Puppeteer/Chrome dari 'npx puppeteer'
 }
 
 async function scrapeGMaps(niche, city, totalLeads = 10) {
