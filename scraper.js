@@ -38,7 +38,6 @@ async function scrapeGMaps(niche, city, totalLeads = 10) {
             '--disable-setuid-sandbox',
             '--disable-dev-shm-usage',
             '--disable-gpu',
-            '--no-zygote',
             '--disable-extensions',
             '--disable-features=site-per-process',
             '--js-flags=--max-old-space-size=256',
