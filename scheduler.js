@@ -36,14 +36,18 @@ function runBotCycle() {
     console.log(`\n✅ [SCHEDULER] Siklus otomatis selesai. Menunggu jadwal cron berikutnya...`);
 }
 
-// Jadwalkan task
+// Jadwalkan task dengan timezone Indonesia (WIB)
+// Menambahkan timezone penting agar waktu server yang mungkin UTC tidak membuat bot salah jam
 cron.schedule(SCHEDULE, () => {
     runBotCycle();
+}, {
+    scheduled: true,
+    timezone: "Asia/Jakarta"
 });
 
 // Jalankan sekali langsung saat startup agar pengguna bisa melihat proses berjalan otomatis seketika!
 console.log(`\n🚀 [SCHEDULER] Menjalankan siklus otomatis pertama langsung saat startup...`);
 runBotCycle();
 
-console.log(`⏰ Jadwal terpasang: ${SCHEDULE} (Jam 9 pagi, 1 siang, 5 sore)`);
+console.log(`⏰ Jadwal terpasang: ${SCHEDULE} (Jam 9 pagi, 1 siang, 5 sore WIB)`);
 console.log(`Tekan Ctrl + C untuk mematikan scheduler.`);
