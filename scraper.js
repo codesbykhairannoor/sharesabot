@@ -33,6 +33,7 @@ async function scrapeGMaps(niche, city, totalLeads = 10) {
     
     const launchOptions = {
         headless: 'new',
+        protocolTimeout: 180000, // Tambah timeout komunikasi dengan browser (3 menit)
         args: [
             '--no-sandbox',
             '--disable-setuid-sandbox',
@@ -55,24 +56,31 @@ async function scrapeGMaps(niche, city, totalLeads = 10) {
     } catch (launchError) {
         console.error(`\n[SCRAPER] ❌ FATAL: Gagal menjalankan browser!`);
         console.error(`Pesan Error: ${launchError.message}`);
-        console.log(`\n[SOLUSI] Masalah ini biasanya karena:`);
-        console.log(`1. Library sistem kurang. Jalankan ini di VPS:`);
-        console.log(`   sudo apt-get update && sudo apt-get install -y libnss3 libatk1.0-0 libatk-bridge2.0-0 libcups2 libdrm2 libxkbcommon0 libxcomposite1 libxdamage1 libxrandr2 libgbm1 libpango-1.0-0 libcairo2 libasound2 chromium-browser`);
-        console.log(`2. Disk VPS Penuh. Cek dengan perintah: df -h`);
-        console.log(`3. Folder /tmp penuh atau tidak punya ijin tulis.`);
         return;
     }
     
     const page = await browser.newPage();
+    
+    // OPTIMASI SUPER HEMAT RAM & CPU UNTUK VPS AWS (BLOCK GAMBAR, CSS, FONT)
+    await page.setRequestInterception(true);
+    page.on('request', (req) => {
+        const resourceType = req.resourceType();
+        if (['image', 'stylesheet', 'font', 'media'].includes(resourceType)) {
+            req.abort();
+        } else {
+            req.continue();
+        }
+    });
+
     await page.setViewport({ width: 1280, height: 800 });
     await page.setUserAgent('Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36');
     
     try {
         console.log(`[SCRAPER] Memuat halaman Google Maps...`);
-        await page.goto(searchUrl, { waitUntil: 'domcontentloaded', timeout: 45000 });
+        await page.goto(searchUrl, { waitUntil: 'domcontentloaded', timeout: 90000 });
         await new Promise(r => setTimeout(r, 5000));
         console.log(`[SCRAPER] Menunggu panel hasil pencarian muncul...`);
-        await page.waitForSelector('div[role="feed"]', { timeout: 45000 });
+        await page.waitForSelector('div[role="feed"]', { timeout: 60000 });
     } catch (e) {
         console.log(`[SCRAPER] Gagal memuat halaman atau feed tidak ditemukan: ${e.message}`);
         await browser.close();

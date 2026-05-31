@@ -1,13 +1,8 @@
 [
     {
         "niche": "Make Up Artist",
-        "city": "Bandung",
-        "last_scraped": 1780062509664
-    },
-    {
-        "niche": "Make Up Artist",
         "city": "Surabaya",
-        "last_scraped": 0
+        "last_scraped": 1780136714897
     },
     {
         "niche": "Make Up Artist",
@@ -498,5 +493,10 @@
         "niche": "Make Up Artist",
         "city": "Jakarta",
         "last_scraped": 1780038715628
+    },
+    {
+        "niche": "Make Up Artist",
+        "city": "Bandung",
+        "last_scraped": 1780062509664
     }
 ]
