@@ -7,9 +7,9 @@ console.log("🔥 SHARESABOT SCHEDULER AKTIF 24/7 🔥");
 console.log("==================================================");
 console.log("Bot akan mencari target baru secara otomatis sesuai jadwal.");
 
-// Jadwal: Setiap jam 09:00, 13:00, dan 17:00
+// Jadwal: Setiap jam 08:00, 11:00, 14:00, 17:00, 20:00 (5 kali sehari)
 // Format Cron: Menit Jam Tanggal Bulan Hari
-const SCHEDULE = '0 9,13,17 * * *';
+const SCHEDULE = '0 8,11,14,17,20 * * *';
 
 // Fungsi utama yang mengeksekusi siklus bot
 function runBotCycle() {
@@ -49,5 +49,5 @@ cron.schedule(SCHEDULE, () => {
 console.log(`\n🚀 [SCHEDULER] Menjalankan siklus otomatis pertama langsung saat startup...`);
 runBotCycle();
 
-console.log(`⏰ Jadwal terpasang: ${SCHEDULE} (Jam 9 pagi, 1 siang, 5 sore WIB)`);
+console.log(`⏰ Jadwal terpasang: ${SCHEDULE} (Jam 8, 11, 14, 17, 20 WIB)`);
 console.log(`Tekan Ctrl + C untuk mematikan scheduler.`);
