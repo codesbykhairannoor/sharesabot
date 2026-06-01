@@ -32,7 +32,7 @@ async function scrapeGMaps(niche, city, totalLeads = 10) {
     }
     
     const launchOptions = {
-        headless: true, // Pakai headless lama (jauh lebih hemat RAM dari 'new')
+        headless: 'new', // Harus 'new' supaya ga kena Captcha Google
         protocolTimeout: 180000, 
         args: [
             '--no-sandbox',
@@ -45,8 +45,7 @@ async function scrapeGMaps(niche, city, totalLeads = 10) {
             '--disable-renderer-backgrounding',
             '--disable-background-timer-throttling',
             '--disable-backgrounding-occluded-windows',
-            '--disable-ipc-flooding-protection',
-            '--single-process' // Ekstra hemat RAM
+            '--disable-ipc-flooding-protection'
         ]
     };
     if (chromePath) launchOptions.executablePath = chromePath;
@@ -70,7 +69,7 @@ async function scrapeGMaps(niche, city, totalLeads = 10) {
     await page.setRequestInterception(true);
     page.on('request', (req) => {
         const resourceType = req.resourceType();
-        if (['image', 'stylesheet', 'font', 'media', 'manifest', 'other'].includes(resourceType)) {
+        if (['image', 'stylesheet', 'font', 'media'].includes(resourceType)) {
             req.abort();
         } else {
             req.continue();
@@ -127,18 +126,29 @@ async function scrapeGMaps(niche, city, totalLeads = 10) {
             .filter(href => href && href.includes('/place/'));
     }, totalLeads);
     
+    // Tutup tab pencarian utama untuk membebaskan RAM
+    await page.close();
+    
     // Buang duplikat URL
     const uniqueUrls = [...new Set(urls)].slice(0, totalLeads);
     console.log(`[SCRAPER] Menemukan ${uniqueUrls.length} link tempat potensial. Mulai ekstrak data...`);
     
     for (const url of uniqueUrls) {
         if (results.length >= totalLeads) break;
+        
+        // Buka TAB BARU untuk setiap link, lalu tutup lagi. Ini 100% anti memori bocor (OOM)
+        const detailPage = await browser.newPage();
+        await detailPage.setRequestInterception(true);
+        detailPage.on('request', (req) => {
+            if (['image', 'stylesheet', 'font', 'media'].includes(req.resourceType())) req.abort();
+            else req.continue();
+        });
+        
         try {
-            // Kunjungi link tempat secara langsung (jauh lebih ringan dari klik animasi Maps)
-            await page.goto(url, { waitUntil: 'domcontentloaded', timeout: 60000 });
+            await detailPage.goto(url, { waitUntil: 'domcontentloaded', timeout: 60000 });
             await new Promise(r => setTimeout(r, 2000));
             
-            const data = await page.evaluate(() => {
+            const data = await detailPage.evaluate(() => {
                 let name = document.querySelector('h1')?.innerText || "";
                 const phoneEl = document.querySelector('button[data-tooltip="Salin nomor telepon"]');
                 if (phoneEl && name) {
@@ -165,7 +175,8 @@ async function scrapeGMaps(niche, city, totalLeads = 10) {
             }
         } catch (err) {
             console.log(`[SCRAPER] Gagal memuat detail tempat, lanjut ke berikutnya...`);
-            continue;
+        } finally {
+            await detailPage.close(); // Selalu tutup tab untuk membebaskan RAM VPS
         }
     }
     
