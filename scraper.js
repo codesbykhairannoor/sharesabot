@@ -126,8 +126,8 @@ async function scrapeGMaps(niche, city, totalLeads = 10) {
             .filter(href => href && href.includes('/place/'));
     }, totalLeads);
     
-    // Tutup tab pencarian utama untuk membebaskan RAM
-    await page.close();
+    // Tutup browser utama karena kita sudah dapat semua URL
+    await browser.close();
     
     // Buang duplikat URL
     const uniqueUrls = [...new Set(urls)].slice(0, totalLeads);
@@ -136,15 +136,18 @@ async function scrapeGMaps(niche, city, totalLeads = 10) {
     for (const url of uniqueUrls) {
         if (results.length >= totalLeads) break;
         
-        // Buka TAB BARU untuk setiap link, lalu tutup lagi. Ini 100% anti memori bocor (OOM)
-        const detailPage = await browser.newPage();
-        await detailPage.setRequestInterception(true);
-        detailPage.on('request', (req) => {
-            if (['image', 'stylesheet', 'font', 'media'].includes(req.resourceType())) req.abort();
-            else req.continue();
-        });
-        
+        let detailBrowser;
         try {
+            // LAUNCH BROWSER BARU PER LINK! Ini jaminan 100% anti-OOM di VPS 1GB.
+            detailBrowser = await puppeteer.launch(launchOptions);
+            const detailPage = await detailBrowser.newPage();
+            
+            await detailPage.setRequestInterception(true);
+            detailPage.on('request', (req) => {
+                if (['image', 'stylesheet', 'font', 'media'].includes(req.resourceType())) req.abort();
+                else req.continue();
+            });
+            
             await detailPage.goto(url, { waitUntil: 'domcontentloaded', timeout: 60000 });
             await new Promise(r => setTimeout(r, 2000));
             
@@ -174,9 +177,11 @@ async function scrapeGMaps(niche, city, totalLeads = 10) {
                 console.log(`[SCRAPER] Found: ${data.name} | ${data.phone}`);
             }
         } catch (err) {
-            console.log(`[SCRAPER] Gagal memuat detail tempat, lanjut ke berikutnya...`);
+            console.log(`[SCRAPER] Gagal memuat detail tempat, skip...`);
         } finally {
-            await detailPage.close(); // Selalu tutup tab untuk membebaskan RAM VPS
+            if (detailBrowser) {
+                await detailBrowser.close().catch(() => {});
+            }
         }
     }
     
