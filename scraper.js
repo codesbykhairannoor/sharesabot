@@ -145,6 +145,10 @@ async function scrapeGMaps(niche, city, totalLeads = 10) {
             detailBrowser = await puppeteer.launch(launchOptions);
             const detailPage = await detailBrowser.newPage();
             
+            // WAJIB SET USER-AGENT & VIEWPORT DI TAB BARU (Kalau nggak, Google ngasih versi Mobile yang struktur H1-nya beda!)
+            await detailPage.setViewport({ width: 1280, height: 800 });
+            await detailPage.setUserAgent('Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36');
+            
             await detailPage.setRequestInterception(true);
             detailPage.on('request', (req) => {
                 if (['image', 'stylesheet', 'font', 'media'].includes(req.resourceType())) req.abort();
@@ -180,7 +184,9 @@ async function scrapeGMaps(niche, city, totalLeads = 10) {
             const debugTitle = await detailPage.title();
             
             const data = await detailPage.evaluate(() => {
-                let name = document.querySelector('h1')?.innerText || "";
+                // Fallback jika H1 tidak ada (karena versi UI Google Maps beda-beda)
+                let name = document.querySelector('h1')?.innerText || document.title.split('- Google Maps')[0].split('- Google')[0].trim() || "";
+
                 
                 // 1. Coba berdasar tooltip bahasa Indo atau Inggris
                 let phoneEl = document.querySelector('button[data-tooltip="Salin nomor telepon"]') || 
