@@ -151,13 +151,33 @@ async function scrapeGMaps(niche, city, totalLeads = 10) {
                 else req.continue();
             });
             
+            // Set cookie consent untuk mem-bypass layar "Before you continue" dari Google
+            await detailPage.setCookie({
+                name: 'CONSENT',
+                value: 'YES+cb.20230501-14-p0.en+FX+410',
+                domain: '.google.com'
+            });
+
             // Tambahkan param hl=id agar memaksa bahasa Indonesia
             const targetUrl = url.includes('?') ? url + '&hl=id' : url + '?hl=id';
             await detailPage.goto(targetUrl, { waitUntil: 'domcontentloaded', timeout: 60000 });
             
+            // Handle Google Consent screen jika masih lolos
+            if (detailPage.url().includes('consent.google')) {
+                try {
+                    await detailPage.evaluate(() => {
+                        const forms = document.querySelectorAll('form');
+                        if (forms.length > 0) forms[forms.length - 1].submit();
+                    });
+                    await detailPage.waitForNavigation({ timeout: 10000 }).catch(() => {});
+                } catch(e) {}
+            }
+            
             // Tunggu H1 (Nama Tempat) muncul, karena VPS mungkin butuh waktu render elemen React-nya
             await detailPage.waitForSelector('h1', { timeout: 15000 }).catch(() => {});
             await new Promise(r => setTimeout(r, 1500)); // Ekstra jeda
+            
+            const debugTitle = await detailPage.title();
             
             const data = await detailPage.evaluate(() => {
                 let name = document.querySelector('h1')?.innerText || "";
@@ -194,18 +214,21 @@ async function scrapeGMaps(niche, city, totalLeads = 10) {
                         return { name, phone: cleanPhone };
                     }
                 }
-                return null;
+                return { debugName: name, hasPhoneEl: !!phoneEl }; // Return debug info jika gagal
             });
             
-            if (data && !visited.has(data.name)) {
+            if (data && data.phone && !visited.has(data.name)) {
                 visited.add(data.name);
                 results.push({
-                    ...data,
+                    name: data.name,
+                    phone: data.phone,
                     niche,
                     city,
                     status: 'PENDING'
                 });
                 console.log(`[SCRAPER] Found: ${data.name} | ${data.phone}`);
+            } else if (data && !data.phone) {
+                console.log(`[SCRAPER] Lewati (Tanpa WA): ${data.debugName} | Halaman: ${debugTitle}`);
             }
         } catch (err) {
             console.log(`[SCRAPER] Gagal memuat detail tempat, skip...`);
