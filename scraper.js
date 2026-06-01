@@ -96,51 +96,62 @@ async function scrapeGMaps(niche, city, totalLeads = 10) {
         await page.evaluate(() => {
             const feed = document.querySelector('div[role="feed"]');
             if (feed) {
-                feed.scrollBy(0, 3000);
-            }
-        });
-        await new Promise(r => setTimeout(r, 3000));
-        scrollAttempts++;
-        
-        const items = await page.$$('div[role="article"]');
-        if (!items.length) break;
-        
-        for (const item of items) {
-            if (results.length >= totalLeads) break;
+    
+    const urls = await page.evaluate(async (maxLeads) => {
+        const feed = document.querySelector('div[role="feed"]');
+        let scrollAttempts = 0;
+        while (scrollAttempts < 15) {
+            if (feed) feed.scrollBy(0, 5000);
+            await new Promise(r => setTimeout(r, 2000));
+            scrollAttempts++;
+            const currentItems = document.querySelectorAll('div[role="article"] a');
+            if (currentItems.length >= maxLeads * 2) break;
+        }
+        const items = document.querySelectorAll('div[role="article"] a');
+        return Array.from(items)
+            .map(a => a.href)
+            .filter(href => href && href.includes('/place/'));
+    }, totalLeads);
+    
+    // Buang duplikat URL
+    const uniqueUrls = [...new Set(urls)].slice(0, totalLeads);
+    console.log(`[SCRAPER] Menemukan ${uniqueUrls.length} link tempat potensial. Mulai ekstrak data...`);
+    
+    for (const url of uniqueUrls) {
+        if (results.length >= totalLeads) break;
+        try {
+            // Kunjungi link tempat secara langsung (jauh lebih ringan dari klik animasi Maps)
+            await page.goto(url, { waitUntil: 'domcontentloaded', timeout: 60000 });
+            await new Promise(r => setTimeout(r, 2000));
             
-            try {
-                const name = await item.evaluate(el => el.getAttribute('aria-label'));
-                if (!name || visited.has(name)) continue;
-                visited.add(name);
-                
-                await item.click();
-                await new Promise(r => setTimeout(r, 3000));
-                
-                // Cari nomor telepon
-                const phoneEl = await page.$('button[data-tooltip="Salin nomor telepon"]');
-                if (!phoneEl) continue;
-                
-                const phoneRaw = await phoneEl.evaluate(el => el.innerText);
-                if (!phoneRaw || phoneRaw === '-') continue;
-                
-                // Bersihkan nomor
-                let cleanPhone = phoneRaw.replace(/\D/g, '');
-                if (cleanPhone.startsWith('0')) cleanPhone = '62' + cleanPhone.slice(1);
-                else if (cleanPhone.startsWith('8')) cleanPhone = '62' + cleanPhone;
-                
-                if (cleanPhone.startsWith('628')) {
-                    results.push({
-                        name,
-                        niche,
-                        city,
-                        phone: cleanPhone,
-                        status: 'PENDING'
-                    });
-                    console.log(`[SCRAPER] Found: ${name} | ${cleanPhone}`);
+            const data = await page.evaluate(() => {
+                let name = document.querySelector('h1')?.innerText || "";
+                const phoneEl = document.querySelector('button[data-tooltip="Salin nomor telepon"]');
+                if (phoneEl && name) {
+                    let phoneRaw = phoneEl.innerText || '';
+                    let cleanPhone = phoneRaw.replace(/\D/g, '');
+                    if (cleanPhone.startsWith('0')) cleanPhone = '62' + cleanPhone.slice(1);
+                    else if (cleanPhone.startsWith('8')) cleanPhone = '62' + cleanPhone;
+                    if (cleanPhone.startsWith('628')) {
+                        return { name, phone: cleanPhone };
+                    }
                 }
-            } catch (err) {
-                continue;
+                return null;
+            });
+            
+            if (data && !visited.has(data.name)) {
+                visited.add(data.name);
+                results.push({
+                    ...data,
+                    niche,
+                    city,
+                    status: 'PENDING'
+                });
+                console.log(`[SCRAPER] Found: ${data.name} | ${data.phone}`);
             }
+        } catch (err) {
+            console.log(`[SCRAPER] Gagal memuat detail tempat, lanjut ke berikutnya...`);
+            continue;
         }
     }
     
