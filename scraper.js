@@ -89,13 +89,6 @@ async function scrapeGMaps(niche, city, totalLeads = 10) {
     
     const results = [];
     const visited = new Set();
-    let scrollAttempts = 0;
-    
-    while (results.length < totalLeads && scrollAttempts < 15) {
-        // Scroll panel hasil pencarian secara langsung di dalam browser agar stabil
-        await page.evaluate(() => {
-            const feed = document.querySelector('div[role="feed"]');
-            if (feed) {
     
     const urls = await page.evaluate(async (maxLeads) => {
         const feed = document.querySelector('div[role="feed"]');
