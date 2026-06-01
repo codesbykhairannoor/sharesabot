@@ -32,8 +32,8 @@ async function scrapeGMaps(niche, city, totalLeads = 10) {
     }
     
     const launchOptions = {
-        headless: 'new',
-        protocolTimeout: 180000, // Tambah timeout komunikasi dengan browser (3 menit)
+        headless: true, // Pakai headless lama (jauh lebih hemat RAM dari 'new')
+        protocolTimeout: 180000, 
         args: [
             '--no-sandbox',
             '--disable-setuid-sandbox',
@@ -45,7 +45,8 @@ async function scrapeGMaps(niche, city, totalLeads = 10) {
             '--disable-renderer-backgrounding',
             '--disable-background-timer-throttling',
             '--disable-backgrounding-occluded-windows',
-            '--disable-ipc-flooding-protection'
+            '--disable-ipc-flooding-protection',
+            '--single-process' // Ekstra hemat RAM
         ]
     };
     if (chromePath) launchOptions.executablePath = chromePath;
@@ -61,11 +62,15 @@ async function scrapeGMaps(niche, city, totalLeads = 10) {
     
     const page = await browser.newPage();
     
+    page.on('error', err => {
+        console.log(`[SCRAPER] Page Error/Crash: ${err.message}`);
+    });
+
     // OPTIMASI SUPER HEMAT RAM & CPU UNTUK VPS AWS (BLOCK GAMBAR, CSS, FONT)
     await page.setRequestInterception(true);
     page.on('request', (req) => {
         const resourceType = req.resourceType();
-        if (['image', 'stylesheet', 'font', 'media'].includes(resourceType)) {
+        if (['image', 'stylesheet', 'font', 'media', 'manifest', 'other'].includes(resourceType)) {
             req.abort();
         } else {
             req.continue();
@@ -79,6 +84,22 @@ async function scrapeGMaps(niche, city, totalLeads = 10) {
         console.log(`[SCRAPER] Memuat halaman Google Maps...`);
         await page.goto(searchUrl, { waitUntil: 'domcontentloaded', timeout: 90000 });
         await new Promise(r => setTimeout(r, 5000));
+        
+        // Handle Google Consent screen jika diredirect
+        const currentUrl = page.url();
+        if (currentUrl.includes('consent.google.com')) {
+            console.log(`[SCRAPER] Terjebak di Google Consent. Mencoba bypass...`);
+            try {
+                await page.evaluate(() => {
+                    const forms = document.querySelectorAll('form');
+                    if (forms.length > 0) forms[forms.length - 1].submit(); // Usually the "Accept all" form
+                });
+                await new Promise(r => setTimeout(r, 5000));
+            } catch(e) {
+                console.log(`[SCRAPER] Gagal bypass consent:`, e.message);
+            }
+        }
+
         console.log(`[SCRAPER] Menunggu panel hasil pencarian muncul...`);
         await page.waitForSelector('div[role="feed"]', { timeout: 60000 });
     } catch (e) {
