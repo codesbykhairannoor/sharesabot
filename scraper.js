@@ -1,4 +1,6 @@
-const puppeteer = require('puppeteer');
+const puppeteer = require('puppeteer-extra');
+const StealthPlugin = require('puppeteer-extra-plugin-stealth');
+puppeteer.use(StealthPlugin());
 const fs = require('fs');
 const path = require('path');
 
@@ -32,7 +34,8 @@ async function scrapeGMaps(niche, city, totalLeads = 10) {
     }
     
     const launchOptions = {
-        headless: 'new', // Harus 'new' supaya ga kena Captcha Google
+        headless: true, // Kembali ke mode super enteng, Captcha ditangani Stealth Plugin
+
         protocolTimeout: 180000, 
         args: [
             '--no-sandbox',
