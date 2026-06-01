@@ -151,17 +151,45 @@ async function scrapeGMaps(niche, city, totalLeads = 10) {
                 else req.continue();
             });
             
-            await detailPage.goto(url, { waitUntil: 'domcontentloaded', timeout: 60000 });
-            await new Promise(r => setTimeout(r, 2000));
+            // Tambahkan param hl=id agar memaksa bahasa Indonesia
+            const targetUrl = url.includes('?') ? url + '&hl=id' : url + '?hl=id';
+            await detailPage.goto(targetUrl, { waitUntil: 'domcontentloaded', timeout: 60000 });
+            
+            // Tunggu H1 (Nama Tempat) muncul, karena VPS mungkin butuh waktu render elemen React-nya
+            await detailPage.waitForSelector('h1', { timeout: 15000 }).catch(() => {});
+            await new Promise(r => setTimeout(r, 1500)); // Ekstra jeda
             
             const data = await detailPage.evaluate(() => {
                 let name = document.querySelector('h1')?.innerText || "";
-                const phoneEl = document.querySelector('button[data-tooltip="Salin nomor telepon"]');
+                
+                // 1. Coba berdasar tooltip bahasa Indo atau Inggris
+                let phoneEl = document.querySelector('button[data-tooltip="Salin nomor telepon"]') || 
+                              document.querySelector('button[data-tooltip="Copy phone number"]');
+                
+                // 2. Coba berdasar atribut data-item-id
+                if (!phoneEl) {
+                    phoneEl = document.querySelector('button[data-item-id^="phone:tel:"]');
+                }
+                
+                // 3. Fallback pencarian teks mentah di semua button
+                if (!phoneEl) {
+                    const buttons = Array.from(document.querySelectorAll('button'));
+                    phoneEl = buttons.find(b => {
+                        const text = (b.innerText || '').replace(/\D/g, '');
+                        return text.length >= 10 && text.length <= 14 && (text.startsWith('0') || text.startsWith('8') || text.startsWith('62'));
+                    });
+                }
+
                 if (phoneEl && name) {
                     let phoneRaw = phoneEl.innerText || '';
+                    if (!phoneRaw && phoneEl.getAttribute('data-item-id')) {
+                        phoneRaw = phoneEl.getAttribute('data-item-id').replace('phone:tel:', '');
+                    }
+                    
                     let cleanPhone = phoneRaw.replace(/\D/g, '');
                     if (cleanPhone.startsWith('0')) cleanPhone = '62' + cleanPhone.slice(1);
                     else if (cleanPhone.startsWith('8')) cleanPhone = '62' + cleanPhone;
+                    
                     if (cleanPhone.startsWith('628')) {
                         return { name, phone: cleanPhone };
                     }
