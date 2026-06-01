@@ -34,7 +34,7 @@ async function scrapeGMaps(niche, city, totalLeads = 10) {
     }
     
     const launchOptions = {
-        headless: true, // Kembali ke mode super enteng, Captcha ditangani Stealth Plugin
+        headless: 'shell', // Puppeteer v22+ membutuhkan 'shell' untuk headless jadul super ringan
 
         protocolTimeout: 180000, 
         args: [
