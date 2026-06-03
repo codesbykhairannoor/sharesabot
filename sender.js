@@ -1,4 +1,4 @@
-const { default: makeWASocket, useMultiFileAuthState, DisconnectReason, delay, fetchLatestBaileysVersion } = require('@whiskeysockets/baileys');
+const { default: makeWASocket, useMultiFileAuthState, DisconnectReason, delay, fetchLatestBaileysVersion, Browsers } = require('@whiskeysockets/baileys');
 const pino = require('pino');
 const fs = require('fs');
 const qrcode = require('qrcode-terminal');
@@ -15,7 +15,7 @@ function spin(text) {
 
 function getCustomMessage(name, niche, city) {
     const defaultMsg = spin(`{Halo|Hai|Selamat pagi|Selamat siang} kak, {salam kenal|perkenalkan}. Saya {liat|melihat} profil ${name} di Google Maps daerah ${city}. Ulasannya {bagus banget|keren sekali|sangat positif}! ✨\n\n` +
-           `Kebetulan kami dari Sharesa (sharesa.space). Skrg kan klien tuh makin {kritis|selektif} ya kak, apalagi di industri ${niche} lagi rame banget isu bisnis {fiktif|bodong}.\n\n` +
+           `Kebetulan kami dari tim Sharesa. Skrg kan klien tuh makin {kritis|selektif} ya kak, apalagi di industri ${niche} lagi rame banget isu bisnis {fiktif|bodong}.\n\n` +
            `Nah, biar calon klien makin {trust|yakin|percaya} pas nyari jasa ${niche}, kita ada solusi pembuatan website company profile/portofolio {profesional|premium|elegan}.\n\n` +
            `Kalo dari ${name} ada rencana {ningkatin|menaikkan} trust klien lewat website, mari diskusi santai kak. {Sukses terus ya|Sehat dan sukses selalu}! 😊`);
 
@@ -23,70 +23,70 @@ function getCustomMessage(name, niche, city) {
 
     if (cleanNiche.includes("make up artist") || cleanNiche.includes("mua")) {
         return spin(`{Halo|Hai|Selamat pagi} kak, {salam kenal|perkenalkan}. Saya lihat profil {MUA|jasa makeup} ${name} di Google Maps daerah ${city}. Portofolionya {keren banget|sangat estetik|luar biasa}! ✨\n\n` +
-               `Kebetulan kami dari Sharesa (sharesa.space). Sekarang kan calon pengantin atau klien wisuda itu {kritis|selektif} banget ya kak pas nyari MUA. Mereka butuh lihat portofolio lengkap, price list, dan jadwal booking secara rapi.\n\n` +
+               `Kebetulan kami dari tim Sharesa. Sekarang kan calon pengantin atau klien wisuda itu {kritis|selektif} banget ya kak pas nyari MUA. Mereka butuh lihat portofolio lengkap, price list, dan jadwal booking secara rapi.\n\n` +
                `Biar calon klien makin percaya dan langsung gercep booking, kami ada solusi pembuatan website portofolio & booking MUA {profesional|premium}.\n\n` +
                `Kalau dari ${name} ada rencana bikin website portofolio biar kelihatan makin {premium|profesional} dan tepercaya, yuk diskusi santai kak. {Sukses terus ya|Semoga makin laris manis}! 😊`);
     }
 
     if (cleanNiche.includes("catering") || cleanNiche.includes("katering")) {
         return spin(`{Halo|Hai} kak, {salam kenal|perkenalkan}. Saya lihat profil katering ${name} di Google Maps daerah ${city}. Ulasannya {mantap sekali|bagus banget|sangat memuaskan}! ✨\n\n` +
-               `Kebetulan kami dari Sharesa (sharesa.space). Di industri katering pernikahan/acara, calon klien biasanya sangat selektif membandingkan paket menu, review food test, dan dokumentasi event.\n\n` +
+               `Kebetulan kami dari tim Sharesa. Di industri katering pernikahan/acara, calon klien biasanya sangat selektif membandingkan paket menu, review food test, dan dokumentasi event.\n\n` +
                `Biar calon klien makin yakin tanpa ragu, kami ada solusi pembuatan website katalog menu & company profile katering yang {profesional|menggugah selera|elegan}.\n\n` +
                `Jika dari ${name} ada rencana merilis website portofolio katering yang {mewah|premium}, mari diskusi santai kak. {Sukses selalu usahanya|Semoga makin berkah usahanya}! 😊`);
     }
 
     if (cleanNiche.includes("wedding") || cleanNiche.includes("wo")) {
         return spin(`{Halo|Hai} kak, {salam kenal|perkenalkan}. Saya lihat profil Wedding Organizer ${name} di Google Maps daerah ${city}. Dokumentasi acaranya {luar biasa|sangat keren|estetik banget}! ✨\n\n` +
-               `Kebetulan kami dari Sharesa (sharesa.space). Sekarang calon pengantin sangat kritis membandingkan paket WO, vendor rekanan, dan testimoni sukses lewat internet.\n\n` +
+               `Kebetulan kami dari tim Sharesa. Sekarang calon pengantin sangat kritis membandingkan paket WO, vendor rekanan, dan testimoni sukses lewat internet.\n\n` +
                `Biar brand ${name} kelihatan makin kredibel, premium, dan mendominasi di ${city}, kami menyediakan solusi pembuatan website company profile & portofolio WO yang {elegan|profesional}.\n\n` +
                `Jika kakak ada rencana menaikkan level branding WO-nya lewat website profesional, mari kita ngobrol santai. {Sukses terus ya kak|Sehat dan sukses selalu}! 😊`);
     }
 
     if (cleanNiche.includes("interior") || cleanNiche.includes("kontraktor")) {
         return spin(`{Halo|Hai} pak/bu, {salam kenal|perkenalkan}. Saya lihat profil jasa interior ${name} di Google Maps daerah ${city}. Hasil project-nya {sangat estetik|keren sekali|luar biasa}! ✨\n\n` +
-               `Kebetulan kami dari Sharesa (sharesa.space). Klien interior/renovasi sekarang sangat detail menilai portofolio desain 3D, material, dan progress project sebelum memilih kontraktor.\n\n` +
+               `Kebetulan kami dari tim Sharesa. Klien interior/renovasi sekarang sangat detail menilai portofolio desain 3D, material, dan progress project sebelum memilih kontraktor.\n\n` +
                `Biar calon klien makin trust dan yakin untuk dealing project besar, kami menyediakan jasa pembuatan website portofolio proyek & profil kontraktor {profesional|premium}.\n\n` +
                `Jika dari ${name} ada rencana mempercantik branding digital lewat website yang premium, mari diskusi santai pak/bu. {Sukses selalu project-nya|Semoga makin banyak projectnya}! 😊`);
     }
 
     if (cleanNiche.includes("klinik kecantikan") || cleanNiche.includes("beauty")) {
         return spin(`{Halo|Hai} kak, {salam kenal|perkenalkan}. Saya lihat profil klinik kecantikan ${name} di Google Maps daerah ${city}. Rating dan review-nya {bagus sekali|sangat memuaskan}! ✨\n\n` +
-               `Kebetulan kami dari Sharesa (sharesa.space). Pasien klinik kecantikan sekarang sangat kritis membandingkan jenis treatment, profil dokter ahli, testimoni real, dan kemudahan booking jadwal.\n\n` +
+               `Kebetulan kami dari tim Sharesa. Pasien klinik kecantikan sekarang sangat kritis membandingkan jenis treatment, profil dokter ahli, testimoni real, dan kemudahan booking jadwal.\n\n` +
                `Untuk meningkatkan kepercayaan pasien dan mempermudah reservasi online, kami ada solusi pembuatan website klinik kecantikan yang {elegan|premium} dan terintegrasi sistem booking.\n\n` +
                `Jika ${name} ingin menaikkan prestise klinik lewat website premium, yuk diskusi santai kak. {Sukses terus kliniknya|Sehat dan sukses selalu}! 😊`);
     }
 
     if (cleanNiche.includes("klinik gigi") || cleanNiche.includes("dokter gigi")) {
         return spin(`{Halo|Hai} dokter, {salam kenal|perkenalkan}. Saya lihat profil klinik gigi ${name} di Google Maps daerah ${city}. Ulasan pasiennya {sangat positif|luar biasa}! ✨\n\n` +
-               `Kebetulan kami dari Sharesa (sharesa.space). Pasien gigi sekarang sangat memperhatikan kenyamanan klinik, sertifikasi dokter, ketersediaan jadwal, serta testimoni penanganan.\n\n` +
+               `Kebetulan kami dari tim Sharesa. Pasien gigi sekarang sangat memperhatikan kenyamanan klinik, sertifikasi dokter, ketersediaan jadwal, serta testimoni penanganan.\n\n` +
                `Agar calon pasien lebih mudah melihat jadwal praktik dokter dan melakukan reservasi online, kami menyediakan solusi pembuatan website klinik gigi {modern|tepercaya}.\n\n` +
                `Jika dokter ada rencana membuat website klinik gigi yang profesional, mari kita berdiskusi santai. {Sehat dan sukses selalu dok|Semoga kliniknya makin ramai dok}! 😊`);
     }
 
     if (cleanNiche.includes("rental") || cleanNiche.includes("sewa mobil")) {
         return spin(`{Halo|Hai} pak/bu, {salam kenal|perkenalkan}. Saya lihat profil rental mobil ${name} di Google Maps daerah ${city}. Unit armadanya {lengkap sekali|keren-keren}! ✨\n\n` +
-               `Kebetulan kami dari Sharesa (sharesa.space). Klien korporat maupun personal sekarang sangat mengutamakan kejelasan tarif, syarat sewa, serta daftar armada mobil mewah yang ready.\n\n` +
+               `Kebetulan kami dari tim Sharesa. Klien korporat maupun personal sekarang sangat mengutamakan kejelasan tarif, syarat sewa, serta daftar armada mobil mewah yang ready.\n\n` +
                `Biar rental mobil ${name} terlihat makin bonafide dan tepercaya, kami menawarkan solusi pembuatan website katalog sewa mobil mewah yang responsif dan {elegan|profesional}.\n\n` +
                `Jika ada rencana meningkatkan branding rentalnya lewat website premium, mari diskusi santai pak/bu. {Sukses selalu usahanya|Laris terus rentalnya}! 😊`);
     }
 
     if (cleanNiche.includes("studio foto") || cleanNiche.includes("fotografi")) {
         return spin(`{Halo|Hai} kak, {salam kenal|perkenalkan}. Saya lihat profil studio foto ${name} di Google Maps daerah ${city}. Hasil jepretannya {luar biasa estetik|sangat keren|bagus banget}! ✨\n\n` +
-               `Kebetulan kami dari Sharesa (sharesa.space). Klien yang mencari jasa foto sangat mengandalkan website portofolio untuk menilai kualitas tone warna dan konsep studio.\n\n` +
+               `Kebetulan kami dari tim Sharesa. Klien yang mencari jasa foto sangat mengandalkan website portofolio untuk menilai kualitas tone warna dan konsep studio.\n\n` +
                `Biar calon klien makin jatuh cinta dengan karya ${name} dan langsung booking, kami menawarkan jasa pembuatan website galeri portofolio fotografi yang {premium|profesional}.\n\n` +
                `Jika kakak tertarik membuat portofolio studio foto tampil lebih profesional di website sendiri, yuk diskusi santai. {Sukses terus karyanya|Semoga makin laris}! 😊`);
     }
 
     if (cleanNiche.includes("event organizer") || cleanNiche.includes("eo")) {
         return spin(`{Halo|Hai} kak, {salam kenal|perkenalkan}. Saya lihat profil Event Organizer ${name} di Google Maps daerah ${city}. Event-event yang ditangani {sangat seru|keren banget}! ✨\n\n` +
-               `Kebetulan kami dari Sharesa (sharesa.space). Klien corporate maupun promotor sekarang sangat selektif melihat skala event, testimonial klien besar, dan dokumentasi detail acara.\n\n` +
+               `Kebetulan kami dari tim Sharesa. Klien corporate maupun promotor sekarang sangat selektif melihat skala event, testimonial klien besar, dan dokumentasi detail acara.\n\n` +
                `Biar EO ${name} terlihat semakin berkelas dan kredibel untuk memenangkan tender-tender besar, kami ada solusi pembuatan website company profile & portofolio EO {profesional|premium}.\n\n` +
                `Jika ada rencana memperkuat kredibilitas EO lewat website berstandar industri, mari kita diskusi santai kak. {Sukses terus acaranya|Makin sukses event-eventnya}! 😊`);
     }
 
     if (cleanNiche.includes("arsitek") || cleanNiche.includes("desain rumah")) {
         return spin(`{Halo|Hai} pak/bu, {salam kenal|perkenalkan}. Saya lihat profil jasa arsitek ${name} di Google Maps daerah ${city}. Desain-desainnya {sangat inspiratif|mewah dan elegan|luar biasa}! ✨\n\n` +
-               `Kebetulan kami dari Sharesa (sharesa.space). Calon klien arsitek biasanya ingin melihat portofolio gambar 3D render, layout denah, hingga foto rumah yang sudah terbangun secara jelas.\n\n` +
+               `Kebetulan kami dari tim Sharesa. Calon klien arsitek biasanya ingin melihat portofolio gambar 3D render, layout denah, hingga foto rumah yang sudah terbangun secara jelas.\n\n` +
                `Biar kredibilitas Anda makin kuat dibanding kompetitor, kami menghadirkan jasa pembuatan website portofolio arsitek yang {profesional|eksklusif}.\n\n` +
                `Jika bapak/ibu tertarik menampilkan karya arsitektur terbaik lewat website premium, mari diskusi santai. {Sukses selalu project-nya|Semoga makin banyak kliennya}! 😊`);
     }
@@ -103,10 +103,27 @@ async function connectToWhatsApp() {
         version,
         auth: state,
         logger: pino({ level: 'silent' }),
-        browser: ['ShAresa Bot', 'Chrome', '1.0']
+        browser: Browsers.macOS('Desktop'),
+        markOnlineOnConnect: true
     });
 
     sock.ev.on('creds.update', saveCreds);
+
+    // Fitur Anti-Banned: Membaca otomatis pesan yang masuk agar terlihat seperti manusia
+    sock.ev.on('messages.upsert', async (m) => {
+        if (m.type === 'notify') {
+            for (let msg of m.messages) {
+                if (!msg.key.fromMe) {
+                    try {
+                        await sock.readMessages([msg.key]);
+                        console.log(`[SENDER] 👁️ Membaca pesan masuk dari prospek (Anti-banned read receipt)...`);
+                    } catch (e) {
+                        // ignore error if unable to read
+                    }
+                }
+            }
+        }
+    });
 
     sock.ev.on('connection.update', async (update) => {
         const { connection, lastDisconnect, qr } = update;
