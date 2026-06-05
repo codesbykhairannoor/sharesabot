@@ -23,29 +23,25 @@ async function sendTemplateMessage(lead) {
     const targetPhone = formatPhoneNumber(lead.phone);
     
     // Konfigurasi Payload API Meta
-    // PERHATIAN: Anda HARUS mengganti "hello_world" dengan nama template yang sudah diapprove di dashboard Meta
     const payload = {
         messaging_product: "whatsapp",
         recipient_type: "individual",
         to: targetPhone,
         type: "template",
         template: {
-            name: "hello_world", // GANTI INI DENGAN NAMA TEMPLATE ASLI ANDA
+            name: "sapaan_awal_bisnis", // Anda wajib membuat template dengan nama ini di Meta
             language: {
-                code: "en_US" // GANTI INI SESUAI BAHASA TEMPLATE (contoh: id)
-            }
-            /* JIKA TEMPLATE MEMILIKI VARIABEL NAMA/KOTA, TAMBAHKAN COMPONENTS DI SINI:
-            ,
+                code: "id" // Bahasa Indonesia
+            },
             components: [
                 {
                     type: "body",
                     parameters: [
-                        { type: "text", text: lead.name },
-                        { type: "text", text: lead.city }
+                        { type: "text", text: lead.name }, // Mengisi variabel {{1}}
+                        { type: "text", text: lead.city }  // Mengisi variabel {{2}}
                     ]
                 }
             ]
-            */
         }
     };
 
