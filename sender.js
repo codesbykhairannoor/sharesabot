@@ -3,13 +3,12 @@ const pino = require('pino');
 const fs = require('fs');
 const path = require('path');
 const qrcode = require('qrcode-terminal');
-const { spinText, randomDelay, calculateTypingTime } = require('./utils_antiban');
+const { spinText, randomDelay, calculateTypingTime, gaussianRandomDelay, isWorkingHour } = require('./utils_antiban');
 
 // =========================================================================
 // CONFIG: BATAS PENGIRIMAN AMAN
 // =========================================================================
-const MAX_MESSAGES_PER_RUN = 5; // Berapa pesan maksimal yang dikirim dalam satu sesi eksekusi (biar nggak dicurigai)
-
+const MAX_MESSAGES_PER_RUN = 3; // Kurangi jadi 3 per sesi agar lebih natural
 const DB_PATH = path.join(__dirname, 'database.json');
 
 // Membaca Data Prospek
@@ -30,7 +29,7 @@ function updateLeadStatus(phone, newStatus) {
     }
 }
 
-// Format Nomor Telepon menjadi format JID WhatsApp (628... @s.whatsapp.net)
+// Format Nomor Telepon menjadi format JID WhatsApp
 function formatToJid(phone) {
     let clean = phone.replace(/\D/g, '');
     if (clean.startsWith('0')) {
@@ -39,11 +38,27 @@ function formatToJid(phone) {
     return clean + '@s.whatsapp.net';
 }
 
-// Template Pesan dengan Spintax
-// Ini akan dirandom secara otomatis oleh fungsi spinText
-function getMessageTemplate(name, city) {
-    const rawTemplate = `{Halo|Hai|Permisi|Selamat pagi/siang/sore} kak, perkenalkan {saya|kami} melihat profil bisnis *${name}* di Google Maps daerah ${city}. {Ulasannya bagus banget!|Reviewnya keren-keren nih!|Kami sangat terkesan dengan portofolionya.} {Boleh ngobrol sebentar kak?|Ada waktu luang sebentar kak buat ngobrol?|Kami ada penawaran menarik, boleh ngobrol bentar?}`;
+// 1. Pesan Pancingan (Singkat & Memaksa Balasan)
+function getBaitMessage(name, city) {
+    const rawTemplate = `{Halo|Hai|Permisi} kak, {maaf ganggu|selamat siang}. {Ini|Apakah ini} dengan admin {MUA|makeup} *${name}* yang di daerah ${city} {ya|bukan ya}?`;
     return spinText(rawTemplate);
+}
+
+// 2. Pembuatan Kartu Kontak (VCard)
+function getVCard() {
+    const vcard = 'BEGIN:VCARD\n'
+                + 'VERSION:3.0\n' 
+                + 'FN:Sharesa Space\n' // Nama yang muncul
+                + 'ORG:Sharesa Space Digital;\n'
+                + 'TEL;type=CELL;type=VOICE;waid=6287813259106:+62 878-1325-9106\n' // Nomor Utama Lu
+                + 'END:VCARD';
+    
+    return {
+        contacts: {
+            displayName: 'Sharesa Space',
+            contacts: [{ vcard }]
+        }
+    };
 }
 
 // =========================================================================
@@ -51,8 +66,13 @@ function getMessageTemplate(name, city) {
 // =========================================================================
 async function startBot() {
     console.log("==================================================");
-    console.log("🥷 MEMULAI SENDER WHATSAPP (MODE SILUMAN) 🥷");
+    console.log("🥷 MEMULAI SENDER WHATSAPP (ADVANCED STEALTH) 🥷");
     console.log("==================================================");
+
+    if (!isWorkingHour()) {
+        console.log("💤 Di luar jam kerja (Hanya aktif jam 09:00 - 17:00). Bot dimatikan untuk menghindari ban.");
+        process.exit(0);
+    }
 
     const pendingLeads = getPendingLeads();
     if (pendingLeads.length === 0) {
@@ -68,10 +88,11 @@ async function startBot() {
 
     const sock = makeWASocket({
         version,
-        logger: pino({ level: 'silent' }), // Sembunyikan log ribet Baileys
+        logger: pino({ level: 'silent' }),
         printQRInTerminal: true,
         auth: state,
-        browser: ['Mac OS', 'Safari', '10.15.7'] // Nyamar jadi browser Mac biar elegan
+        browser: ['Mac OS', 'Safari', '10.15.7'], // OS Spoofing
+        generateHighQualityLinkPreview: true
     });
 
     sock.ev.on('creds.update', saveCreds);
@@ -102,47 +123,46 @@ async function startBot() {
                 console.log(`👤 Target : ${lead.name} (${lead.phone})`);
                 
                 const jid = formatToJid(lead.phone);
-                const finalMessage = getMessageTemplate(lead.name, lead.city);
+                const baitMessage = getBaitMessage(lead.name, lead.city);
 
                 try {
                     // 1. Cek apakah nomor target terdaftar di WA
-                    console.log(`[SENDER] Memeriksa status pendaftaran WA...`);
                     const [result] = await sock.onWhatsApp(jid);
                     if (!result || !result.exists) {
                         console.log(`❌ GAGAL: Nomor tidak terdaftar di WhatsApp.`);
                         updateLeadStatus(lead.phone, "GAGAL (Tidak Terdaftar)");
-                        continue; // Lanjut ke target berikutnya
+                        continue;
                     }
 
-                    console.log(`✅ Nomor Aktif! Mempersiapkan pengiriman mode siluman...`);
+                    // 2. KIRIM KARTU KONTAK (VCARD) DULU
+                    console.log(`[SILUMAN] 📇 Mengirim Kartu Kontak (VCard) agar tidak di-Report Spam...`);
+                    await sock.sendMessage(jid, getVCard());
+                    
+                    // Jeda sejenak setelah ngirim VCard
+                    await randomDelay(2000, 4000);
 
-                    // 2. SIMULASI MENGETIK (Human Typing Simulator)
-                    const typingTimeMs = calculateTypingTime(finalMessage);
+                    // 3. SIMULASI MENGETIK (Human Typing Simulator)
+                    const typingTimeMs = calculateTypingTime(baitMessage);
                     console.log(`[SILUMAN] ⌨️ Pura-pura mengetik selama ${(typingTimeMs/1000).toFixed(1)} detik...`);
                     
-                    // Beritahu WA kalau kita lagi ngetik
                     await sock.presenceSubscribe(jid);
-                    await delay(500); // jeda bentar sebelum status ngetik muncul
+                    await delay(500);
                     await sock.sendPresenceUpdate('composing', jid);
-                    
-                    // Tunggu sesuai durasi ngetik manusia
-                    await randomDelay(typingTimeMs, typingTimeMs + 500);
-                    
-                    // Berhenti ngetik
+                    await randomDelay(typingTimeMs, typingTimeMs + 1000);
                     await sock.sendPresenceUpdate('paused', jid);
 
-                    // 3. KIRIM PESAN
-                    console.log(`[SILUMAN] ✉️ Mengirim pesan: "${finalMessage}"`);
-                    await sock.sendMessage(jid, { text: finalMessage });
+                    // 4. KIRIM PESAN PANCINGAN SINGKAT
+                    console.log(`[SILUMAN] ✉️ Mengirim pesan: "${baitMessage}"`);
+                    await sock.sendMessage(jid, { text: baitMessage });
                     console.log(`✅ BERHASIL TERKIRIM!`);
-                    updateLeadStatus(lead.phone, "TERKIRIM (Siluman)");
+                    updateLeadStatus(lead.phone, "TERKIRIM (Siluman Tkt Dewa)");
 
-                    // 4. RANDOM JITTER DELAY (Antar pesan agar tidak dibanned)
-                    // Jika ini bukan pesan terakhir, beri jeda acak 2 sampai 5 menit
+                    // 5. GAUSSIAN JITTER DELAY (Antar pesan agar tidak dibanned)
                     if (i < targetLeads.length - 1) {
-                        const delaySeconds = Math.floor(Math.random() * (300 - 120 + 1) + 120); // 120s - 300s
-                        console.log(`[SILUMAN] 💤 Menunggu ${(delaySeconds/60).toFixed(1)} menit sebelum kirim ke target berikutnya... (Menghindari banned)\n`);
-                        await randomDelay(delaySeconds * 1000, delaySeconds * 1000 + 1000);
+                        const minDelay = 180000; // 3 Menit
+                        const maxDelay = 420000; // 7 Menit
+                        console.log(`[SILUMAN] 💤 Menggunakan Gaussian Delay... Menunggu jeda aman...`);
+                        await gaussianRandomDelay(minDelay, maxDelay);
                     }
 
                 } catch (error) {
@@ -152,7 +172,7 @@ async function startBot() {
             }
 
             console.log(`\n🎉 SEMUA ANTREAN SELESAI DIPROSES! Bot akan dimatikan otomatis.`);
-            await sock.logout(); // Logout aman untuk membersihkan RAM
+            await sock.logout();
             process.exit(0);
         }
     });

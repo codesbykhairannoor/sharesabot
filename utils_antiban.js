@@ -39,23 +39,52 @@ function randomDelay(minMs, maxMs) {
 /**
  * Kalkulator Waktu Mengetik (Human Typing Simulator)
  * Menghitung berapa lama seorang manusia mengetik berdasarkan panjang teks
- * Asumsi: 1 karakter membutuhkan waktu 100ms - 250ms
  */
 function calculateTypingTime(text) {
     const minMsPerChar = 50;
     const maxMsPerChar = 150;
-    
     let totalTime = 0;
     for (let i = 0; i < text.length; i++) {
         totalTime += Math.floor(Math.random() * (maxMsPerChar - minMsPerChar + 1) + minMsPerChar);
     }
-    
-    // Maksimal waktu ngetik kita batasi 12 detik biar nggak kelamaan nunggu
     return Math.min(totalTime, 12000); 
+}
+
+/**
+ * Algoritma Jeda Gaussian (Box-Muller Transform)
+ * Menghasilkan delay yang distribusinya menyerupai lonceng (lebih alami daripada sekadar Math.random())
+ */
+function gaussianRandomDelay(minMs, maxMs) {
+    let u = 0, v = 0;
+    while(u === 0) u = Math.random();
+    while(v === 0) v = Math.random();
+    let num = Math.sqrt(-2.0 * Math.log(u)) * Math.cos(2.0 * Math.PI * v);
+    
+    num = num / 10.0 + 0.5; // Translate to 0 -> 1
+    if (num > 1 || num < 0) num = Math.random(); // resample
+    
+    const delay = Math.floor(num * (maxMs - minMs) + minMs);
+    return new Promise(resolve => setTimeout(resolve, delay));
+}
+
+/**
+ * Fungsi Penjaga Sirkadian (Jam Kerja)
+ * Memastikan bot hanya mengirim pesan pada jam 09:00 pagi sampai 17:00 sore waktu server
+ */
+function isWorkingHour() {
+    // Menggunakan waktu lokal VPS
+    const currentHour = new Date().getHours();
+    // Jam 9 pagi sampai jam 5 sore (17)
+    if (currentHour >= 9 && currentHour < 17) {
+        return true;
+    }
+    return false;
 }
 
 module.exports = {
     spinText,
     randomDelay,
-    calculateTypingTime
+    calculateTypingTime,
+    gaussianRandomDelay,
+    isWorkingHour
 };
