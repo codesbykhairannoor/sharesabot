@@ -114,7 +114,8 @@ async function startBot() {
         printQRInTerminal: true,
         auth: state,
         browser: ['Mac OS', 'Safari', '10.15.7'],
-        generateHighQualityLinkPreview: true
+        generateHighQualityLinkPreview: true,
+        markOnlineOnConnect: false // [SILUMAN] Mencegah status "Online" 24 Jam
     });
 
     sock.ev.on('creds.update', saveCreds);
