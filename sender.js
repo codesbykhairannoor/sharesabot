@@ -108,6 +108,16 @@ async function startBot() {
     const { state, saveCreds } = await useMultiFileAuthState('auth_info_baileys');
     const { version } = await fetchLatestBaileysVersion();
 
+    // =====================================================================
+    // [SILUMAN] TOPENG IP (SOCKS5 PROXY)
+    // =====================================================================
+    let proxyAgent = undefined;
+    if (process.env.SOCKS_PROXY_URL) {
+        const { SocksProxyAgent } = require('socks-proxy-agent');
+        console.log(`🌐 [SILUMAN] Menggunakan Proxy: ${process.env.SOCKS_PROXY_URL}`);
+        proxyAgent = new SocksProxyAgent(process.env.SOCKS_PROXY_URL);
+    }
+
     const sock = makeWASocket({
         version,
         logger: pino({ level: 'silent' }),
@@ -115,7 +125,9 @@ async function startBot() {
         auth: state,
         browser: ['Mac OS', 'Safari', '10.15.7'],
         generateHighQualityLinkPreview: true,
-        markOnlineOnConnect: false // [SILUMAN] Mencegah status "Online" 24 Jam
+        markOnlineOnConnect: false, // [SILUMAN] Mencegah status "Online" 24 Jam
+        agent: proxyAgent,          // [SILUMAN] Merutekan websocket via Proxy
+        fetchAgent: proxyAgent      // [SILUMAN] Merutekan download/upload media via Proxy
     });
 
     sock.ev.on('creds.update', saveCreds);
