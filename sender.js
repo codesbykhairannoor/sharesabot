@@ -178,10 +178,28 @@ async function startBot() {
         }
 
         if (connection === 'close') {
-            const shouldReconnect = (lastDisconnect.error)?.output?.statusCode !== DisconnectReason.loggedOut;
+            const statusCode = (lastDisconnect.error)?.output?.statusCode;
+            
+            // =====================================================================
+            // [SILUMAN] HEALTH MONITOR & AUTO-KILL SYSTEM
+            // =====================================================================
+            // Kode 401, 403, 405, 428 biasanya adalah jebakan/tendangan dari Meta
+            if ([401, 403, 405, 428].includes(statusCode)) {
+                console.error(`\n🚨 [ALARM BAHAYA] 🚨`);
+                console.error(`Meta mengirimkan sinyal deteksi bot (Error Code: ${statusCode}).`);
+                console.error(`Untuk menyelamatkan nomor dari BANNED PERMANEN, bot mengaktifkan fungsi AUTO-KILL.`);
+                console.error(`Sistem dimatikan secara paksa. Tolong jangan nyalakan bot ini selama beberapa jam ke depan!`);
+                process.exit(1); // Paksa mati, jangan biarkan Baileys mencoba reconnect
+            }
+
+            const shouldReconnect = statusCode !== DisconnectReason.loggedOut;
             console.log(`[SENDER] Koneksi terputus. Reconnecting: ${shouldReconnect}`);
+            
             if (shouldReconnect) {
-                startBot();
+                // Jeda acak sebelum reconnect agar tidak terlihat seperti script
+                const reconnectDelay = Math.floor(Math.random() * (10000 - 3000) + 3000);
+                console.log(`[SILUMAN] Menunggu ${(reconnectDelay/1000).toFixed(1)} detik sebelum mencoba masuk lagi...`);
+                setTimeout(startBot, reconnectDelay);
             } else {
                 console.log('[SENDER] Anda telah log out. Silakan hapus folder "auth_info_baileys" dan scan ulang.');
                 process.exit(1);
