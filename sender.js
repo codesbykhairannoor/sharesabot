@@ -268,6 +268,7 @@ async function startBot() {
                 process.exit(1);
             }
 
+            const shouldReconnect = statusCode !== DisconnectReason.loggedOut;
             if (shouldReconnect) {
                 const reconnectDelay = Math.floor(Math.random() * (10000 - 3000) + 3000);
                 console.log(`[SILUMAN] Koneksi terputus tak terduga. Mematikan sistem dalam ${(reconnectDelay/1000).toFixed(1)} detik agar di-restart oleh PM2...`);
