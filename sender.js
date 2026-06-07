@@ -196,17 +196,21 @@ async function startBot() {
         proxyAgent = new SocksProxyAgent(process.env.SOCKS_PROXY_URL);
     }
 
-    const sock = makeWASocket({
+    const sockConfig = {
         version,
         logger: pino({ level: 'silent' }),
         printQRInTerminal: true,
         auth: state,
-        browser: ['Mac OS', 'Safari', '10.15.7'],
         generateHighQualityLinkPreview: true,
-        markOnlineOnConnect: false,
-        agent: proxyAgent,
-        fetchAgent: proxyAgent
-    });
+        markOnlineOnConnect: false
+    };
+
+    if (proxyAgent) {
+        sockConfig.agent = proxyAgent;
+        sockConfig.fetchAgent = proxyAgent;
+    }
+
+    const sock = makeWASocket(sockConfig);
 
     sock.ev.on('creds.update', saveCreds);
 
