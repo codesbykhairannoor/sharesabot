@@ -198,11 +198,10 @@ async function startBot() {
 
     const sockConfig = {
         version,
-        logger: pino({ level: 'silent' }),
+        logger: pino({ level: 'silent' }), // Sembunyikan log ribet Baileys
         printQRInTerminal: true,
         auth: state,
-        generateHighQualityLinkPreview: true,
-        markOnlineOnConnect: false
+        browser: ['Mac OS', 'Safari', '10.15.7'] // Nyamar jadi browser Mac biar elegan
     };
 
     if (proxyAgent) {
