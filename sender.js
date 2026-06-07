@@ -287,11 +287,11 @@ async function startBot() {
             if (!global.isSchedulerStarted) {
                 global.isSchedulerStarted = true;
 
-                // 1. Jadwal Scraper: Setiap jam 8, 11, 14, 17, 20 WIB
-                cron.schedule('0 8,11,14,17,20 * * *', () => {
+                // 1. Jadwal Scraper: Diatur KETAT sesuai jam operasional (Jam 09:00, 11:00, 13:00, 15:00, 16:00 WIB)
+                cron.schedule('0 9,11,13,15,16 * * *', () => {
                     runScraperTask();
                 }, { timezone: "Asia/Jakarta" });
-                console.log(`⏰ Jadwal Scraper terpasang (Jam 8, 11, 14, 17, 20 WIB).`);
+                console.log(`⏰ Jadwal Scraper terpasang (Jam 09:00, 11:00, 13:00, 15:00, 16:00 WIB).`);
 
                 // 2. Jadwal Pengirim Pesan: Setiap 5 menit mengecek antrean
                 cron.schedule('*/5 * * * *', () => {
