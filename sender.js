@@ -270,8 +270,9 @@ async function startBot() {
 
             const shouldReconnect = statusCode !== DisconnectReason.loggedOut;
             if (shouldReconnect) {
+                const errorMsg = lastDisconnect.error?.message || 'Unknown Error';
                 const reconnectDelay = Math.floor(Math.random() * (10000 - 3000) + 3000);
-                console.log(`[SILUMAN] Koneksi terputus tak terduga. Mematikan sistem dalam ${(reconnectDelay/1000).toFixed(1)} detik agar di-restart oleh PM2...`);
+                console.log(`[SILUMAN] Koneksi terputus tak terduga (Code: ${statusCode}, Error: ${errorMsg}). Mematikan sistem dalam ${(reconnectDelay/1000).toFixed(1)} detik agar di-restart oleh PM2...`);
                 setTimeout(() => process.exit(1), reconnectDelay);
             } else {
                 console.log('[SENDER] Anda telah log out. Hapus folder "auth_info_baileys" dan scan ulang.');
