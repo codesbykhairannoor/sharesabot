@@ -265,7 +265,7 @@ async function startBot() {
         if (connection === 'close') {
             const statusCode = (lastDisconnect.error)?.output?.statusCode;
             
-            if ([401, 403, 405, 428].includes(statusCode)) {
+            if ([401, 403, 405, 500].includes(statusCode)) {
                 console.error(`\n🚨 [ALARM BAHAYA] Meta mengirimkan sinyal deteksi bot (Code: ${statusCode}).`);
                 console.error(`Sistem dimatikan paksa (AUTO-KILL) untuk menghindari BANNED PERMANEN.`);
                 process.exit(1);
