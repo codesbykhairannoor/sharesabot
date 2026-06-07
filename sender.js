@@ -295,7 +295,7 @@ async function startBot() {
                 }, { timezone: "Asia/Jakarta" });
                 console.log(`⏰ Jadwal Scraper terpasang (Jam 8, 11, 14, 17, 20 WIB).`);
 
-                // 2. Jadwal Pengecekan Pesan: Setiap 5 Menit
+                // 2. Jadwal Pengirim Pesan: Setiap 5 menit mengecek antrean
                 cron.schedule('*/5 * * * *', () => {
                     processPendingLeadsTask(sock);
                 }, { timezone: "Asia/Jakarta" });
