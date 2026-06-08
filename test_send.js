@@ -1,4 +1,4 @@
-const { makeWASocket, useMultiFileAuthState } = require('@whiskeysockets/baileys');
+const { makeWASocket, useMultiFileAuthState, fetchLatestBaileysVersion } = require('@whiskeysockets/baileys');
 const pino = require('pino');
 
 async function sendTestMessage() {
@@ -13,11 +13,14 @@ async function sendTestMessage() {
     const jid = clean + '@s.whatsapp.net';
 
     const { state, saveCreds } = await useMultiFileAuthState('auth_info_baileys');
+    const { version } = await fetchLatestBaileysVersion();
     
     const sock = makeWASocket({
+        version,
         logger: pino({ level: 'silent' }),
         auth: state,
-        printQRInTerminal: true
+        printQRInTerminal: true,
+        browser: ['Mac OS', 'Safari', '10.15.7']
     });
 
     sock.ev.on('creds.update', saveCreds);
