@@ -4,7 +4,7 @@ const fs = require('fs');
 const path = require('path');
 const qrcode = require('qrcode-terminal');
 const cron = require('node-cron');
-const { execSync } = require('child_process');
+const { spawn } = require('child_process');
 const { getNextTarget } = require('./target_manager');
 const { spinText, randomDelay, calculateTypingTime, gaussianRandomDelay, isWorkingHour } = require('./utils_antiban');
 
@@ -101,9 +101,17 @@ function runScraperTask() {
     const target = getNextTarget();
     try {
         console.log(`[SCHEDULER] Target: "${target.niche}" di "${target.city}"`);
-        execSync(`node scraper.js "${target.niche}" "${target.city}" 15`, { stdio: 'inherit' });
+        const scraper = spawn('node', ['scraper.js', target.niche, target.city, '15'], { stdio: 'inherit' });
+        scraper.on('error', (err) => {
+            console.error(`[SCHEDULER] Gagal memulai scraper:`, err.message);
+        });
+        scraper.on('close', (code) => {
+            if (code !== 0) {
+                console.error(`[SCHEDULER] Scraper selesai dengan error kode ${code}`);
+            }
+        });
     } catch (error) {
-        console.error(`[SCHEDULER] Error saat menjalankan scraper:`, error.message);
+        console.error(`[SCHEDULER] Error tidak terduga saat memulai scraper:`, error.message);
     }
 }
 
