@@ -20,7 +20,7 @@ let isProcessingLeads = false; // Flag untuk mencegah overlapping
 function getPendingLeads() {
     if (!fs.existsSync(DB_PATH)) return [];
     const data = JSON.parse(fs.readFileSync(DB_PATH, 'utf8'));
-    return data.filter(lead => lead.status === 'BELUM');
+    return data.filter(lead => lead.status === 'BELUM' || lead.status === 'PENDING');
 }
 
 // Update Status Prospek di Database
