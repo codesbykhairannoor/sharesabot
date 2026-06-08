@@ -117,12 +117,20 @@ function runScraperTask() {
 
 // Fungsi mengecek dan mengirim pesan (Hanya aktif jam kerja)
 async function processPendingLeadsTask(sock) {
+    console.log(`[DEBUG SENDER] Memeriksa kondisi antrean...`);
+    console.log(`[DEBUG SENDER] isProcessingLeads: ${isProcessingLeads}`);
+    
     if (isProcessingLeads) return; // Mencegah bentrok jika proses sebelumnya belum selesai
-    if (!isWorkingHour()) return;  // Dilarang mengirim pesan di luar jam kerja
+    
+    const isWorkHour = isWorkingHour();
+    console.log(`[DEBUG SENDER] isWorkingHour: ${isWorkHour}`);
+    if (!isWorkHour) return;  // Dilarang mengirim pesan di luar jam kerja
 
     isProcessingLeads = true;
     try {
         const pendingLeads = getPendingLeads();
+        console.log(`[DEBUG SENDER] pendingLeads.length: ${pendingLeads.length}`);
+        
         if (pendingLeads.length === 0) {
             isProcessingLeads = false;
             return;
