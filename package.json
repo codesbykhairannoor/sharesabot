@@ -6,6 +6,7 @@
   "dependencies": {
     "@whiskeysockets/baileys": "^6.7.23",
     "dotenv": "^17.4.2",
+    "node-cache": "^5.1.2",
     "node-cron": "^4.2.1",
     "pino": "^9.14.0",
     "pino-pretty": "^11.3.0",

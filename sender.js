@@ -1,10 +1,11 @@
-const { makeWASocket, useMultiFileAuthState, DisconnectReason, fetchLatestBaileysVersion, delay } = require('@whiskeysockets/baileys');
+const { makeWASocket, useMultiFileAuthState, DisconnectReason, fetchLatestBaileysVersion, delay, makeCacheableSignalKeyStore } = require('@whiskeysockets/baileys');
 const pino = require('pino');
 const fs = require('fs');
 const path = require('path');
 const qrcode = require('qrcode-terminal');
 const cron = require('node-cron');
 const { spawn } = require('child_process');
+const NodeCache = require('node-cache');
 const { getNextTarget } = require('./target_manager');
 const { spinText, randomDelay, calculateTypingTime, gaussianRandomDelay, isWorkingHour } = require('./utils_antiban');
 
@@ -15,7 +16,11 @@ const MAX_MESSAGES_PER_RUN = 3;
 const DB_PATH = path.join(__dirname, 'database.json');
 const REPLIED_DB_PATH = path.join(__dirname, 'replied_database.json');
 let isProcessingLeads = false; // Flag untuk mencegah overlapping
-let activeSock = null; // ✅ FIX: Selalu simpan referensi socket AKTIF terbaru
+let activeSock = null; // ✅ FIX 1: Selalu simpan referensi socket AKTIF terbaru
+
+// ✅ FIX 2: msgRetryCounterCache HARUS di luar startBot() agar tidak reset saat reconnect
+// Tanpa ini, pesan yang gagal dikirim ulang akan gagal didekripsi oleh penerima
+const msgRetryCounterCache = new NodeCache();
 
 // Membaca Data Prospek
 function getPendingLeads() {
@@ -215,10 +220,30 @@ async function startBot() {
 
     const sockConfig = {
         version,
-        logger: pino({ level: 'silent' }), // Sembunyikan log ribet Baileys
+        logger: pino({ level: 'silent' }),
         printQRInTerminal: true,
-        auth: state,
-        browser: ['Mac OS', 'Safari', '10.15.7'] // Nyamar jadi browser Mac biar elegan
+        // ✅ FIX 3: Gunakan makeCacheableSignalKeyStore agar kunci enkripsi lebih stabil
+        auth: {
+            creds: state.creds,
+            keys: makeCacheableSignalKeyStore(state.keys, pino({ level: 'silent' }))
+        },
+        browser: ['Mac OS', 'Safari', '10.15.7'],
+        // ✅ FIX 4: msgRetryCounterCache dari luar agar tidak reset saat reconnect
+        msgRetryCounterCache,
+        // ✅ FIX 5: getMessage callback - WAJIB ada agar penerima tidak dapat 'Waiting for this message'
+        getMessage: async (key) => {
+            // Coba cari di database lokal
+            if (fs.existsSync(DB_PATH)) {
+                const data = JSON.parse(fs.readFileSync(DB_PATH, 'utf8'));
+                const found = data.find(d => d.msgId === key.id);
+                if (found?.message) return found.message;
+            }
+            // Fallback: kembalikan undefined agar Baileys coba ulang dari server
+            return undefined;
+        },
+        // ✅ FIX 6: keepAliveIntervalMs agar koneksi tidak diam-diam mati
+        keepAliveIntervalMs: 25000,
+        connectTimeoutMs: 60000
     };
 
     if (proxyAgent) {

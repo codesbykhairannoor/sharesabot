@@ -2,7 +2,7 @@ require('dotenv').config();
 
 async function sendCloudAPITest() {
     // 1. Ganti dengan ID Nomor Telepon Meta App Anda
-    const PHONE_NUMBER_ID = process.env.META_PHONE_NUMBER_ID || "GANTI_DENGAN_PHONE_NUMBER_ID"; 
+    const PHONE_NUMBER_ID = process.env.PHONE_NUMBER_ID || "GANTI_DENGAN_PHONE_NUMBER_ID"; 
     // 2. Ganti dengan Access Token Meta App Anda
     const ACCESS_TOKEN = process.env.META_ACCESS_TOKEN || "GANTI_DENGAN_ACCESS_TOKEN";
     // 3. Nomor target (contoh: nomor teman Anda)
