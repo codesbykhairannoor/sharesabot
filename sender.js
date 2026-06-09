@@ -162,9 +162,12 @@ async function processPendingLeadsTask(sock) {
                     continue;
                 }
 
-                console.log(`[SILUMAN] 📇 Mengirim Kartu Kontak (VCard)...`);
-                await sock.sendMessage(jid, getVCard());
-                await randomDelay(2000, 4000);
+                // ✅ FIX KRITIS: Jangan kirim VCard dulu!
+                // VCard ke kontak BARU memicu "Closing open session in favor of incoming prekey bundle"
+                // yang menyebabkan pesan berikutnya CORRUPT dan tidak terkirim ke penerima.
+                // Biarkan sesi E2E WhatsApp stabil dulu selama 3 detik setelah onWhatsApp check.
+                console.log(`[SILUMAN] ⏳ Menunggu sesi enkripsi E2E stabil...`);
+                await randomDelay(3000, 5000);
 
                 const typingTimeMs = calculateTypingTime(baitMessage);
                 console.log(`[SILUMAN] ⌨️ Pura-pura mengetik selama ${(typingTimeMs/1000).toFixed(1)} detik...`);
