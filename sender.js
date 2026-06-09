@@ -15,6 +15,7 @@ const MAX_MESSAGES_PER_RUN = 3;
 const DB_PATH = path.join(__dirname, 'database.json');
 const REPLIED_DB_PATH = path.join(__dirname, 'replied_database.json');
 let isProcessingLeads = false; // Flag untuk mencegah overlapping
+let activeSock = null; // ✅ FIX: Selalu simpan referensi socket AKTIF terbaru
 
 // Membaca Data Prospek
 function getPendingLeads() {
@@ -299,25 +300,38 @@ async function startBot() {
         } else if (connection === 'open') {
             console.log('\n[MASTER BRAIN] ✅ Berhasil terhubung ke WhatsApp!\n');
             
+            // ✅ FIX KRITIS: Selalu update activeSock ke socket terbaru saat reconnect
+            activeSock = sock;
+            isProcessingLeads = false; // Reset flag jika sebelumnya stuck karena crash
+            
             // JALANKAN PENJADWALAN HANYA SEKALI SAAT KONEKSI PERTAMA DIBUKA
             if (!global.isSchedulerStarted) {
                 global.isSchedulerStarted = true;
 
-                // 1. Jadwal Scraper: Diatur KETAT sesuai jam operasional (Jam 09:00, 11:00, 13:00, 15:00, 16:00 WIB)
+                // 1. Jadwal Scraper: Diatur KETAT sesuai jam operasional
                 cron.schedule('0 9,11,13,15,16 * * *', () => {
                     runScraperTask();
                 }, { timezone: "Asia/Jakarta" });
                 console.log(`⏰ Jadwal Scraper terpasang (Jam 09:00, 11:00, 13:00, 15:00, 16:00 WIB).`);
 
                 // 2. Jadwal Pengirim Pesan: Setiap 5 menit mengecek antrean
+                // ✅ FIX: Pakai activeSock (selalu terbaru), bukan sock lama yang bisa jadi zombie!
                 cron.schedule('*/5 * * * *', () => {
-                    processPendingLeadsTask(sock);
+                    if (activeSock) {
+                        processPendingLeadsTask(activeSock);
+                    } else {
+                        console.log('[SCHEDULER] Socket belum siap, skip siklus ini.');
+                    }
                 }, { timezone: "Asia/Jakarta" });
                 console.log(`⏰ Jadwal Pengirim Pesan terpasang (Mengecek antrean setiap 5 menit).`);
 
                 // Cek langsung saat pertama nyala
                 console.log(`🚀 [MASTER BRAIN] Menginisiasi siklus pertama...`);
-                processPendingLeadsTask(sock);
+                processPendingLeadsTask(activeSock);
+            } else {
+                // Koneksi pulih setelah crash - langsung cek antrean dengan socket baru
+                console.log(`🔄 [MASTER BRAIN] Koneksi pulih! Melanjutkan antrean dengan socket baru...`);
+                processPendingLeadsTask(activeSock);
             }
         }
     });
