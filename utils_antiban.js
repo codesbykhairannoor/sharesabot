@@ -72,16 +72,8 @@ function gaussianRandomDelay(minMs, maxMs) {
  * Memastikan bot hanya mengirim pesan pada jam 09:00 pagi sampai 17:00 sore waktu server
  */
 function isWorkingHour() {
-    // Menggunakan Math (UTC + 7 untuk WIB) agar 100% aman di semua VPS Linux
-    const now = new Date();
-    let currentHour = now.getUTCHours() + 7;
-    if (currentHour >= 24) currentHour -= 24;
-    
-    // Jam 9 pagi sampai jam 5 sore (17)
-    if (currentHour >= 9 && currentHour < 17) {
-        return true;
-    }
-    return false;
+    // Dipaksa 24 jam sesuai permintaan user
+    return true;
 }
 
 module.exports = {
