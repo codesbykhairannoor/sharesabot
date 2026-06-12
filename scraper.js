@@ -256,7 +256,13 @@ async function scrapeGMaps(niche, city, totalLeads = 10) {
     }
     
     const existingPhones = new Set(existingData.map(x => x.phone));
-    const newLeads = results.filter(r => !existingPhones.has(r.phone));
+    const newLeads = [];
+    for (const r of results) {
+        if (!existingPhones.has(r.phone)) {
+            newLeads.push(r);
+            existingPhones.add(r.phone);
+        }
+    }
     
     const finalData = [...existingData, ...newLeads];
     fs.writeFileSync(DB_FILE, JSON.stringify(finalData, null, 4));

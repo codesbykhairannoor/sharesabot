@@ -33,9 +33,38 @@ function getPendingLeads() {
 function updateLeadStatus(phone, newStatus) {
     if (!fs.existsSync(DB_PATH)) return;
     const data = JSON.parse(fs.readFileSync(DB_PATH, 'utf8'));
-    const index = data.findIndex(lead => lead.phone === phone);
-    if (index !== -1) {
-        data[index].status = newStatus;
+    let updated = false;
+    for (let i = 0; i < data.length; i++) {
+        if (data[i].phone === phone) {
+            data[i].status = newStatus;
+            if (newStatus === "TERKIRIM (Menunggu Balasan)") {
+                data[i].sentAt = Date.now();
+            }
+            updated = true;
+        }
+    }
+    if (updated) {
+        fs.writeFileSync(DB_PATH, JSON.stringify(data, null, 4));
+    }
+}
+
+// Bersihkan lead yang sudah lebih dari 24 jam tidak membalas
+function cleanupExpiredLeads() {
+    if (!fs.existsSync(DB_PATH)) return;
+    const data = JSON.parse(fs.readFileSync(DB_PATH, 'utf8'));
+    let updated = false;
+    const now = Date.now();
+    for (let i = 0; i < data.length; i++) {
+        if (data[i].status === "TERKIRIM (Menunggu Balasan)" && data[i].sentAt) {
+            const diffHours = (now - data[i].sentAt) / (1000 * 60 * 60);
+            if (diffHours >= 24) {
+                data[i].status = "EXPIRED (Tidak Dibalas 24 Jam)";
+                updated = true;
+                console.log(`[CLEANUP] Lead ${data[i].name} (${data[i].phone}) diubah ke EXPIRED.`);
+            }
+        }
+    }
+    if (updated) {
         fs.writeFileSync(DB_PATH, JSON.stringify(data, null, 4));
     }
 }
@@ -279,6 +308,29 @@ async function startBot() {
             return;
         }
 
+        // Cek apakah lead valid dan dalam waktu 24 jam
+        let isValidToReply = false;
+        if (fs.existsSync(DB_PATH)) {
+            const dbData = JSON.parse(fs.readFileSync(DB_PATH, 'utf8'));
+            const lead = dbData.find(l => l.phone === senderPhone);
+            if (lead && lead.status === 'TERKIRIM (Menunggu Balasan)') {
+                if (lead.sentAt) {
+                    const diffHours = (Date.now() - lead.sentAt) / (1000 * 60 * 60);
+                    if (diffHours <= 24) {
+                        isValidToReply = true;
+                    } else {
+                        console.log(`⏰ Target membalas setelah 24 jam. Mengabaikan.`);
+                    }
+                } else {
+                    isValidToReply = true; // Fallback jika lead lama tidak punya sentAt
+                }
+            } else {
+                 console.log(`❌ Target bukan dalam status menunggu balasan (Abaikan pesan umum).`);
+            }
+        }
+        
+        if (!isValidToReply) return;
+
         console.log(`🎯 Target membalas! Mempersiapkan Auto-Reply Siluman...`);
         const pitchMessage = getPitchMessage();
 
@@ -354,8 +406,15 @@ async function startBot() {
                 }, { timezone: "Asia/Jakarta" });
                 console.log(`⏰ Jadwal Pengirim Pesan terpasang (Mengecek antrean setiap 5 menit).`);
 
+                // 3. Jadwal Cleanup: Setiap 1 jam membersihkan lead expired (>24 Jam)
+                cron.schedule('0 * * * *', () => {
+                    cleanupExpiredLeads();
+                }, { timezone: "Asia/Jakarta" });
+                console.log(`⏰ Jadwal Cleanup terpasang (Mengecek expired setiap jam).`);
+
                 // Cek langsung saat pertama nyala
                 console.log(`🚀 [MASTER BRAIN] Menginisiasi siklus pertama...`);
+                cleanupExpiredLeads();
                 processPendingLeadsTask(activeSock);
             } else {
                 // Koneksi pulih setelah crash - langsung cek antrean dengan socket baru
