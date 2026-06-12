@@ -1,4 +1,4 @@
-const { makeWASocket, useMultiFileAuthState, DisconnectReason, fetchLatestBaileysVersion, delay, makeCacheableSignalKeyStore } = require('@whiskeysockets/baileys');
+const { makeWASocket, useMultiFileAuthState, DisconnectReason, fetchLatestBaileysVersion, delay, makeCacheableSignalKeyStore, Browsers } = require('@whiskeysockets/baileys');
 const pino = require('pino');
 const fs = require('fs');
 const path = require('path');
@@ -230,7 +230,8 @@ async function startBot() {
             creds: state.creds,
             keys: makeCacheableSignalKeyStore(state.keys, pino({ level: 'silent' }))
         },
-        browser: ['Mac OS', 'Safari', '10.15.7'],
+        // ✅ FIX 7: Gunakan browser string standar Baileys untuk menghindari error "Tidak dapat menautkan perangkat"
+        browser: Browsers.ubuntu('Chrome'),
         // ✅ FIX 4: msgRetryCounterCache dari luar agar tidak reset saat reconnect
         msgRetryCounterCache,
         // ✅ FIX 5: getMessage callback - WAJIB ada agar penerima tidak dapat 'Waiting for this message'
