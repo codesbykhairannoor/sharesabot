@@ -100,8 +100,8 @@ function jidToPhone(jid) {
     return jid.split('@')[0];
 }
 
-function getBaitMessage(name, city) {
-    const rawTemplate = `{Halo|Hai|Permisi} kak, {maaf ganggu|selamat siang}. {Ini|Apakah ini} dengan admin {MUA|makeup} *${name}* yang di daerah ${city} {ya|bukan ya}?`;
+function getBaitMessage(name, city, niche) {
+    const rawTemplate = `{Halo|Hai|Permisi} kak, {maaf ganggu|selamat siang}. {Ini|Apakah ini} dengan admin *${name}* yang melayani jasa *${niche}* di daerah ${city} {ya|bukan ya}?`;
     return spinText(rawTemplate);
 }
 
@@ -121,8 +121,8 @@ function getVCard() {
     };
 }
 
-function getPitchMessage() {
-    const rawTemplate = `Halo kak! Betul sekali, perkenalkan {saya|kami} dari *Sharesa Space*. \n\nKebetulan {saya|kami} melihat profil dan hasil karya MUA kakak bagus banget! {Kami|Sharesa Space} mau menawarkan kerja sama pembuatan website portofolio profesional untuk menampilkan karya kakak agar lebih meyakinkan calon klien.\n\nJika kakak berkenan, silakan cek contoh portofolio buatan kami di sini ya kak: https://sharesa.space\n\n{Terima kasih atas waktunya!|Semoga sukses selalu kak usahanya!}`;
+function getPitchMessage(niche) {
+    const rawTemplate = `Halo kak! Betul sekali, perkenalkan {saya|kami} dari *Sharesa Space*. \n\nKebetulan {saya|kami} melihat profil dan layanan *${niche}* yang kakak tawarkan bagus banget! {Kami|Sharesa Space} mau menawarkan kerja sama pembuatan website portofolio profesional untuk menampilkan karya dan layanan kakak agar lebih meyakinkan calon klien.\n\nJika kakak berkenan, silakan cek contoh portofolio buatan kami di sini ya kak: https://sharesa.space\n\n{Terima kasih atas waktunya!|Semoga sukses selalu kak usahanya!}`;
     return spinText(rawTemplate);
 }
 
@@ -181,7 +181,7 @@ async function processPendingLeadsTask(sock) {
             console.log(`👤 Target : ${lead.name} (${lead.phone})`);
             
             const jid = formatToJid(lead.phone);
-            const baitMessage = getBaitMessage(lead.name, lead.city);
+            const baitMessage = getBaitMessage(lead.name, lead.city, lead.niche || "jasa profesional");
 
             try {
                 const [result] = await sock.onWhatsApp(jid);
@@ -310,10 +310,12 @@ async function startBot() {
 
         // Cek apakah lead valid dan dalam waktu 24 jam
         let isValidToReply = false;
+        let leadNiche = "jasa profesional";
         if (fs.existsSync(DB_PATH)) {
             const dbData = JSON.parse(fs.readFileSync(DB_PATH, 'utf8'));
             const lead = dbData.find(l => l.phone === senderPhone);
             if (lead && lead.status === 'TERKIRIM (Menunggu Balasan)') {
+                leadNiche = lead.niche || leadNiche;
                 if (lead.sentAt) {
                     const diffHours = (Date.now() - lead.sentAt) / (1000 * 60 * 60);
                     if (diffHours <= 24) {
@@ -332,7 +334,7 @@ async function startBot() {
         if (!isValidToReply) return;
 
         console.log(`🎯 Target membalas! Mempersiapkan Auto-Reply Siluman...`);
-        const pitchMessage = getPitchMessage();
+        const pitchMessage = getPitchMessage(leadNiche);
 
         try {
             const typingTimeMs = calculateTypingTime(pitchMessage);
