@@ -97,7 +97,7 @@ function formatToJid(phone) {
 }
 
 function jidToPhone(jid) {
-    return jid.split('@')[0];
+    return jid.split('@')[0].split(':')[0];
 }
 
 function getBaitMessage(name, city, niche) {
