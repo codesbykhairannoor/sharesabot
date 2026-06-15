@@ -314,7 +314,7 @@ async function startBot() {
         if (fs.existsSync(DB_PATH)) {
             const dbData = JSON.parse(fs.readFileSync(DB_PATH, 'utf8'));
             const lead = dbData.find(l => l.phone === senderPhone);
-            if (lead && lead.status === 'TERKIRIM (Menunggu Balasan)') {
+            if (lead && lead.status && lead.status.startsWith('TERKIRIM')) {
                 leadNiche = lead.niche || leadNiche;
                 if (lead.sentAt) {
                     const diffHours = (Date.now() - lead.sentAt) / (1000 * 60 * 60);
