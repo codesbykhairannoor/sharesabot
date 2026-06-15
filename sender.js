@@ -122,7 +122,7 @@ function getVCard() {
 }
 
 function getPitchMessage(niche) {
-    const rawTemplate = `Halo kak! Betul sekali, perkenalkan {saya|kami} dari *Sharesa Space*. \n\nKebetulan {saya|kami} melihat profil dan layanan *${niche}* yang kakak tawarkan bagus banget!\n\n{Kami|Sharesa Space} mau menawarkan kerja sama pembuatan website resmi profesional untuk bisnis kakak. Apalagi di zaman sekarang calon klien makin banyak *trust issue*, punya website resmi sendiri itu terbukti ampuh banget buat naikin kredibilitas dan bikin klien langsung percaya sama layanan kakak.\n\nJika kakak berkenan, boleh saya izin mengirimkan link beberapa contoh website portofolio yang sudah kami buat?\n\n{Terima kasih atas waktunya kak!|Semoga sukses selalu kak usahanya!}`;
+    const rawTemplate = `Halo kak! Betul sekali, perkenalkan {saya|kami} dari *Sharesa Space*. \n\nKebetulan {saya|kami} melihat profil dan layanan *${niche}* yang kakak tawarkan bagus banget!\n\n{Kami|Sharesa Space} mau menawarkan kerja sama pembuatan website resmi profesional untuk bisnis kakak. Apalagi di zaman sekarang calon klien makin banyak *trust issue*, punya website resmi sendiri itu terbukti ampuh banget buat naikin kredibilitas dan bikin klien langsung percaya sama layanan kakak.\n\nJika kakak berkenan, boleh {saya|kami} jelaskan lebih lanjut mengenai detail penawaran ini kak?\n\n{Terima kasih atas waktunya kak!|Semoga sukses selalu kak usahanya!}`;
     return spinText(rawTemplate);
 }
 
