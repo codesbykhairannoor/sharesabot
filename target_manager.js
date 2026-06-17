@@ -72,13 +72,20 @@ function getNextTarget() {
     // Urutkan berdasarkan waktu scrape paling lama
     history.sort((a, b) => a.last_scraped - b.last_scraped);
 
-    const target = history[0];
+    // Ambil 10 target yang paling lama tidak disentuh, lalu pilih 1 secara acak
+    // Ini memastikan bot tidak terpaku pada 1 niche secara berurutan
+    const poolSize = Math.min(10, history.length);
+    const oldestTargets = history.slice(0, poolSize);
+    const target = oldestTargets[Math.floor(Math.random() * oldestTargets.length)];
 
-    // Update waktu
-    target.last_scraped = Date.now();
-    fs.writeFileSync(HISTORY_FILE, JSON.stringify(history, null, 4));
+    // Update waktu di array asli
+    const idx = history.findIndex(h => h.niche === target.niche && h.city === target.city);
+    if (idx !== -1) {
+        history[idx].last_scraped = Date.now();
+        fs.writeFileSync(HISTORY_FILE, JSON.stringify(history, null, 4));
+    }
 
-    console.log(`[TARGET MANAGER] Memilih target: ${target.niche} di ${target.city}`);
+    console.log(`[TARGET MANAGER] Memilih target acak: ${target.niche} di ${target.city}`);
     return target;
 }
 
