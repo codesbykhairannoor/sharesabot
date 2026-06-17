@@ -38,7 +38,8 @@ async function scrapeGMaps(niche, city, totalLeads = 10) {
     
     const launchOptions = {
         headless: true, // Kembali ke 'true' karena Chromium bawaan VPS mungkin belum support 'shell'
-
+        pipe: true, // Bypass websocket issue on VPS
+        dumpio: false,
         protocolTimeout: 180000, 
         args: [
             '--no-sandbox',
