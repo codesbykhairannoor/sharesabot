@@ -8,7 +8,20 @@ const path = require('path');
 
 const DB_FILE = 'database.json';
 
-// Removed findChromePath to force bundled Puppeteer browser
+// Auto-detect Chrome/Chromium di sistem
+function findChromePath() {
+    const candidates = [
+        '/usr/bin/google-chrome-stable',
+        '/usr/bin/google-chrome',
+        '/usr/bin/chromium-browser',
+        '/usr/bin/chromium',
+        '/snap/bin/chromium'
+    ];
+    for (const p of candidates) {
+        if (fs.existsSync(p)) return p;
+    }
+    return null; // fallback ke bundled Puppeteer/Chrome dari 'npx puppeteer'
+}
 
 async function scrapeGMaps(niche, city, totalLeads = 10) {
     const fullQuery = `${niche} di ${city}`;
@@ -16,7 +29,12 @@ async function scrapeGMaps(niche, city, totalLeads = 10) {
     
     console.log(`[SCRAPER] Navigasi ke: ${searchUrl}`);
     
-    console.log(`[SCRAPER] Menggunakan browser bawaan terisolasi Puppeteer.`);
+    const chromePath = findChromePath();
+    if (chromePath) {
+        console.log(`[SCRAPER] Menggunakan browser: ${chromePath}`);
+    } else {
+        console.log(`[SCRAPER] Menggunakan browser bawaan terisolasi Puppeteer.`);
+    }
     
     const launchOptions = {
         headless: true, // Kembali ke 'true' karena Chromium bawaan VPS mungkin belum support 'shell'
@@ -36,7 +54,7 @@ async function scrapeGMaps(niche, city, totalLeads = 10) {
             '--disable-ipc-flooding-protection'
         ]
     };
-    // Removed executablePath override
+    if (chromePath) launchOptions.executablePath = chromePath;
     
     let browser;
     try {
