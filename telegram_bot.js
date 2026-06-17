@@ -86,17 +86,28 @@ async function processPendingLeads() {
             for (let i = 0; i < pendingLeads.length; i++) {
                 const lead = pendingLeads[i];
                 const waPhone = formatToWaPhone(lead.phone);
-                const baitMsg = getBaitMessage(lead.name, lead.city, lead.niche || "jasa profesional");
+                const niche = lead.niche || "jasa profesional";
                 
-                // Buat link WA.ME
-                const waLink = `https://wa.me/${waPhone}?text=${encodeURIComponent(baitMsg)}`;
+                // 1. Buat Pesan Pancingan
+                const baitMsg = getBaitMessage(lead.name, lead.city, niche);
+                const waLinkBait = `https://wa.me/${waPhone}?text=${encodeURIComponent(baitMsg)}`;
                 
-                const telegramText = `🎯 *TARGET BARU*\n\n`
+                // 2. Buat Pesan Penawaran (Pitch)
+                const pitchMsg = `Halo kak! Betul sekali, perkenalkan kami dari *Sharesa Space*. \n\nKebetulan kami melihat profil dan layanan *${niche}* yang kakak tawarkan bagus banget!\n\nKami mau menawarkan kerja sama pembuatan website resmi profesional untuk bisnis kakak. Apalagi di zaman sekarang calon klien makin banyak *trust issue*, punya website resmi sendiri itu terbukti ampuh banget buat naikin kredibilitas dan bikin klien langsung percaya sama layanan kakak.\n\nJika kakak berkenan, boleh saya jelaskan lebih detail mengenai penawaran ini kak?\n\nTerima kasih atas waktunya kak!`;
+                const waLinkPitch = `https://wa.me/${waPhone}?text=${encodeURIComponent(pitchMsg)}`;
+                
+                const telegramText = `🎯 *TARGET BARU DARI GOOGLE MAPS*\n\n`
                                    + `👤 *Nama:* ${lead.name}\n`
                                    + `🏢 *Niche:* ${lead.niche}\n`
                                    + `📍 *Kota:* ${lead.city}\n`
                                    + `📞 *Nomor:* +${waPhone}\n\n`
-                                   + `👉 *[KLIK DI SINI UNTUK KIRIM WA OTOMATIS](${waLink})*`;
+                                   + `— *AKSI MANUAL ANDA* —\n\n`
+                                   + `1️⃣ *TOMBOL PANCINGAN*\n`
+                                   + `_(Klik ini pertama kali untuk nyapa)_:\n`
+                                   + `👉 [KIRIM PESAN PANCINGAN](${waLinkBait})\n\n`
+                                   + `2️⃣ *TOMBOL PENAWARAN (PITCH)*\n`
+                                   + `_(Klik ini kalau mereka udah bales chat pertama)_:\n`
+                                   + `👉 [KIRIM PESAN PENAWARAN](${waLinkPitch})`;
                 
                 const success = await sendTelegramMessage(telegramText);
                 
