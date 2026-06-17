@@ -1,6 +1,8 @@
 const puppeteer = require('puppeteer-extra');
 const StealthPlugin = require('puppeteer-extra-plugin-stealth');
-puppeteer.use(StealthPlugin());
+const stealth = StealthPlugin();
+stealth.enabledEvasions.delete('user-agent-override'); // Fix ProtocolError on headless shell
+puppeteer.use(stealth);
 const fs = require('fs');
 const path = require('path');
 
