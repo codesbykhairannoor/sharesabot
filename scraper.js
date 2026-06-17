@@ -36,7 +36,7 @@ async function scrapeGMaps(niche, city, totalLeads = 10) {
     }
     
     const launchOptions = {
-        headless: 'shell', // Puppeteer v22+ membutuhkan 'shell' untuk headless jadul super ringan
+        headless: true, // Kembali ke 'true' karena Chromium bawaan VPS mungkin belum support 'shell'
 
         protocolTimeout: 180000, 
         args: [
