@@ -151,6 +151,10 @@ function runScraperTask() {
             if (code !== 0) {
                 console.error(`[SCHEDULER] Scraper selesai dengan error kode ${code}`);
             }
+            // Langsung kirim hasil ke Telegram setelah scraper selesai
+            // (tidak mengandalkan cron timer yang bisa missed karena CPU load)
+            console.log(`[SCHEDULER] Scraper selesai. Langsung cek dan kirim ke Telegram...`);
+            processPendingLeads();
         });
     } catch (error) {
         console.error(`[SCHEDULER] Error tidak terduga saat memulai scraper:`, error.message);
