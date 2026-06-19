@@ -1,10 +1,7 @@
 require('dotenv').config();
 const fs = require('fs');
 const path = require('path');
-const { spawn } = require('child_process');
 const cron = require('node-cron');
-const { getNextTarget } = require('./target_manager.js');
-const { spinText } = require('./utils_antiban.js');
 
 const DB_PATH = path.join(__dirname, 'database.json');
 const TELEGRAM_TOKEN = process.env.TELEGRAM_TOKEN;
@@ -135,34 +132,11 @@ async function processPendingLeads() {
 }
 
 // =========================================================================
-// SCHEDULER (PERSIS SEPERTI SEBELUMNYA)
+// SCHEDULER
 // =========================================================================
 
-function runScraperTask() {
-    console.log(`\n⏰ [SCHEDULER] Menjalankan Scraper otomatis...`);
-    const target = getNextTarget();
-    try {
-        console.log(`[SCHEDULER] Target: "${target.niche}" di "${target.city}"`);
-        const scraper = spawn('node', ['scraper.js', target.niche, target.city, '15'], { stdio: 'inherit' });
-        scraper.on('error', (err) => {
-            console.error(`[SCHEDULER] Gagal memulai scraper:`, err.message);
-        });
-        scraper.on('close', (code) => {
-            if (code !== 0) {
-                console.error(`[SCHEDULER] Scraper selesai dengan error kode ${code}`);
-            }
-            // Langsung kirim hasil ke Telegram setelah scraper selesai
-            // (tidak mengandalkan cron timer yang bisa missed karena CPU load)
-            console.log(`[SCHEDULER] Scraper selesai. Langsung cek dan kirim ke Telegram...`);
-            processPendingLeads();
-        });
-    } catch (error) {
-        console.error(`[SCHEDULER] Error tidak terduga saat memulai scraper:`, error.message);
-    }
-}
-
 console.log("==================================================");
-console.log("🔥 TELEGRAM NOTIFIER & SCRAPER BOT 🔥");
+console.log("🔥 TELEGRAM NOTIFIER BOT 🔥");
 console.log("==================================================");
 
 if (!TELEGRAM_TOKEN || !TELEGRAM_CHAT_ID) {
@@ -170,13 +144,10 @@ if (!TELEGRAM_TOKEN || !TELEGRAM_CHAT_ID) {
     console.log("Silakan atur di file .env Anda.");
 }
 
-// Jadwal Scraper: Setiap jam genap (08:00, 10:00, 12:00, 14:00, 16:00, 18:00 WIB)
-cron.schedule('0 1,3,5,7,9,11 * * *', runScraperTask, { timezone: "Asia/Jakarta" });
-console.log(`⏰ Jadwal Scraper terpasang (2 Jam sekali).`);
-
-// Jadwal Kirim ke Telegram: Setiap 5 menit mengecek database.json
-cron.schedule('*/5 * * * *', processPendingLeads);
-console.log(`⏰ Jadwal Pengecekan Target Baru terpasang (Setiap 5 menit).`);
+// Jadwal Kirim ke Telegram: Setiap 10 menit mengecek database.json
+// (Scraper sudah diurus PM2 ecosystem, jadi tidak perlu node-cron di sini)
+cron.schedule('*/10 * * * *', processPendingLeads);
+console.log(`⏰ Jadwal Pengecekan Target Baru terpasang (Setiap 10 menit).`);
 
 // Proses sekarang juga saat pertama kali dijalankan
 processPendingLeads();
