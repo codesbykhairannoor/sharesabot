@@ -25,6 +25,11 @@ function getBaitMessage(name, city, niche) {
     return spinText(rawTemplate);
 }
 
+function safeText(text) {
+    if (!text) return '';
+    return text.toString().replace(/[_*`\[\]()]/g, '');
+}
+
 // =========================================================================
 // TELEGRAM SENDER
 // =========================================================================
@@ -86,17 +91,20 @@ async function processPendingLeads() {
                 const waPhone = formatToWaPhone(lead.phone);
                 const niche = lead.niche || "jasa profesional";
                 
+                const safeName = safeText(lead.name);
+                const safeNiche = safeText(niche);
+
                 // 1. Buat Pesan Pancingan
-                const baitMsg = getBaitMessage(lead.name, lead.city, niche);
+                const baitMsg = getBaitMessage(safeName, lead.city, safeNiche);
                 const waLinkBait = `https://wa.me/${waPhone}?text=${encodeURIComponent(baitMsg)}`;
                 
                 // 2. Buat Pesan Penawaran (Pitch)
-                const pitchMsg = `Halo kak! Betul sekali, perkenalkan kami dari *Sharesa Space*. \n\nKebetulan kami melihat profil dan layanan *${niche}* yang kakak tawarkan bagus banget!\n\nKami mau menawarkan kerja sama pembuatan website resmi profesional untuk bisnis kakak. Apalagi di zaman sekarang calon klien makin banyak *trust issue*, punya website resmi sendiri itu terbukti ampuh banget buat naikin kredibilitas dan bikin klien langsung percaya sama layanan kakak.\n\nJika kakak berkenan, boleh saya jelaskan lebih detail mengenai penawaran ini kak?\n\nTerima kasih atas waktunya kak!`;
+                const pitchMsg = `Halo kak! Betul sekali, perkenalkan kami dari *Sharesa Space*. \n\nKebetulan kami melihat profil dan layanan *${safeNiche}* yang kakak tawarkan bagus banget!\n\nKami mau menawarkan kerja sama pembuatan website resmi profesional untuk bisnis kakak. Apalagi di zaman sekarang calon klien makin banyak *trust issue*, punya website resmi sendiri itu terbukti ampuh banget buat naikin kredibilitas dan bikin klien langsung percaya sama layanan kakak.\n\nJika kakak berkenan, boleh saya jelaskan lebih detail mengenai penawaran ini kak?\n\nTerima kasih atas waktunya kak!`;
                 const waLinkPitch = `https://wa.me/${waPhone}?text=${encodeURIComponent(pitchMsg)}`;
                 
                 const telegramText = `🎯 *TARGET BARU DARI GOOGLE MAPS*\n\n`
-                                   + `👤 *Nama:* ${lead.name}\n`
-                                   + `🏢 *Niche:* ${lead.niche}\n`
+                                   + `👤 *Nama:* ${safeName}\n`
+                                   + `🏢 *Niche:* ${safeNiche}\n`
                                    + `📍 *Kota:* ${lead.city}\n`
                                    + `📞 *Nomor:* +${waPhone}\n\n`
                                    + `— *AKSI MANUAL ANDA* —\n\n`
