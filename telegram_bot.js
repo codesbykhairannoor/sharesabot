@@ -2,6 +2,7 @@ require('dotenv').config();
 const fs = require('fs');
 const path = require('path');
 const cron = require('node-cron');
+const { spinText } = require('./utils_antiban.js');
 
 const DB_PATH = path.join(__dirname, 'database.json');
 const TELEGRAM_TOKEN = process.env.TELEGRAM_TOKEN;
