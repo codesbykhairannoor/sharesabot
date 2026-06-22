@@ -68,6 +68,11 @@ async function scrapeGMaps(niche, city, totalLeads = 10) {
     
     const page = await browser.newPage();
     
+    // Trik tahan banting: Kasih waktu sampai 5 MENIT buat loading 
+    // karena VPS lagi ngos-ngosan dipake crypto-bot
+    page.setDefaultNavigationTimeout(300000); 
+    page.setDefaultTimeout(300000);
+
     page.on('error', err => {
         console.log(`[SCRAPER] Page Error/Crash: ${err.message}`);
     });
